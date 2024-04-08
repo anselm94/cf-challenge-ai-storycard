@@ -1,53 +1,24 @@
-<script>
-	import Header from './Header.svelte';
-	import './styles.css';
+<script lang="ts">
+	import '../app.pcss';
+
+	import { AppBar, AppShell, ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
 </script>
 
-<div class="app">
-	<Header />
-
-	<main>
-		<slot />
-	</main>
-
-	<footer>
-		<p>visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to learn SvelteKit</p>
-	</footer>
-</div>
-
-<style>
-	.app {
-		display: flex;
-		flex-direction: column;
-		min-height: 100vh;
-	}
-
-	main {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		padding: 1rem;
-		width: 100%;
-		max-width: 64rem;
-		margin: 0 auto;
-		box-sizing: border-box;
-	}
-
-	footer {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		padding: 12px;
-	}
-
-	footer a {
-		font-weight: bold;
-	}
-
-	@media (min-width: 480px) {
-		footer {
-			padding: 12px 0;
-		}
-	}
-</style>
+<AppShell
+	regionPage="relative"
+	slotPageHeader="sticky top-0 z-10"
+	slotSidebarLeft="bg-surface-500/5 w-56 p-4"
+>
+	<svelte:fragment slot="sidebarLeft">
+		<div id="sidebar-left" class="hidden lg:block">
+			<ListBox>
+				<ListBoxItem group="nav" name="medium" value="books"><a href="/">Home</a></ListBoxItem>
+				<ListBoxItem group="nav" name="medium" value="movies"><a href="/about">About</a></ListBoxItem>
+			</ListBox>
+		</div>
+	</svelte:fragment>
+	<svelte:fragment slot="header">
+		<AppBar>Skeleton</AppBar>
+	</svelte:fragment>
+	<slot />
+</AppShell>
