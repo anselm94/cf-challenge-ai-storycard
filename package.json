@@ -11,12 +11,16 @@
 		"format": "prettier --write ."
 	},
 	"devDependencies": {
+		"@floating-ui/dom": "^1.6.3",
+		"@fontsource/abril-fatface": "^5.0.19",
+		"@fontsource/inter": "^5.0.17",
 		"@neoconfetti/svelte": "^1.0.0",
 		"@skeletonlabs/skeleton": "^2.9.0",
 		"@skeletonlabs/tw-plugin": "^0.3.1",
 		"@sveltejs/adapter-cloudflare": "^4.2.1",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
+		"@tailwindcss/forms": "^0.5.7",
 		"@types/eslint": "^8.56.0",
 		"@types/node": "^20.12.5",
 		"@typescript-eslint/eslint-plugin": "^7.0.0",

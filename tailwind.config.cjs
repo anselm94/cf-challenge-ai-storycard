@@ -1,5 +1,6 @@
 import { join } from 'path';
 import { skeleton } from '@skeletonlabs/tw-plugin';
+import forms from '@tailwindcss/forms';
 
 /** @type {import('tailwindcss').Config}*/
 const config = {
@@ -8,18 +9,16 @@ const config = {
 	content: [
 		'./src/**/*.{html,js,svelte,ts}',
 		// 3. Append the path to the Skeleton package
-		join(require.resolve(
-			'@skeletonlabs/skeleton'),
-			'../**/*.{html,js,svelte,ts}'
-		)
+		join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}')
 	],
 	theme: {
-		extend: {},
+		extend: {}
 	},
 	plugins: [
+		forms,
 		// 4. Append the Skeleton plugin (after other plugins)
 		skeleton({
-			themes: { preset: [ "modern" ] }
+			themes: { preset: ['vintage'] }
 		})
 	]
 };

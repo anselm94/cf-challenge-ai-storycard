@@ -1,24 +1,28 @@
 <script lang="ts">
+	import NavBar from '$lib/client/components/NavBar.svelte';
+	import SideBar from '$lib/client/components/Sidebar.svelte';
+	import { arrow, autoUpdate, computePosition, flip, offset, shift } from '@floating-ui/dom';
+	import '@fontsource/abril-fatface';
+	import '@fontsource/inter';
+	import { AppShell, storePopup } from '@skeletonlabs/skeleton';
 	import '../app.pcss';
+	import { onMount } from 'svelte';
 
-	import { AppBar, AppShell, ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
+	onMount(() => {
+		storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
+	});
 </script>
 
 <AppShell
 	regionPage="relative"
 	slotPageHeader="sticky top-0 z-10"
-	slotSidebarLeft="bg-surface-500/5 w-56 p-4"
+	slotSidebarLeft="hidden lg:block bg-surface-500/5 w-56 p-4"
 >
-	<svelte:fragment slot="sidebarLeft">
-		<div id="sidebar-left" class="hidden lg:block">
-			<ListBox>
-				<ListBoxItem group="nav" name="medium" value="books"><a href="/">Home</a></ListBoxItem>
-				<ListBoxItem group="nav" name="medium" value="movies"><a href="/about">About</a></ListBoxItem>
-			</ListBox>
-		</div>
-	</svelte:fragment>
 	<svelte:fragment slot="header">
-		<AppBar>Skeleton</AppBar>
+		<NavBar />
+	</svelte:fragment>
+	<svelte:fragment slot="sidebarLeft">
+		<SideBar />
 	</svelte:fragment>
 	<slot />
 </AppShell>
