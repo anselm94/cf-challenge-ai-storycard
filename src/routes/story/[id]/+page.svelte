@@ -18,6 +18,11 @@
 		fabricCanvas?.renderAll();
 	}
 
+	$: if (txtbxStoryBody) {
+		txtbxStoryBody.text = txtBody;
+		fabricCanvas?.renderAll();
+	}
+
 	const fabricLoadImage = (url: string) =>
 		new Promise<fabric.Image>((resolve) => fabric.Image.fromURL(url, (img) => resolve(img)));
 
@@ -48,7 +53,9 @@
 			fontSize: 22,
 			fontFamily: 'Chewy',
 			fill: '#6B4600',
-			textAlign: 'center'
+			textAlign: 'center',
+			editable: false,
+			selectable: false
 		});
 
 		txtbxStoryBody = new fabric.Textbox(txtBody, {
@@ -58,7 +65,8 @@
 			height: 420,
 			fontSize: 15,
 			isWrapping: true,
-			editable: true,
+			editable: false,
+			selectable: false,
 			fontFamily: 'Poppins',
 			fill: '#6B4600',
 			lineHeight: 1.3,
@@ -88,6 +96,8 @@
 </script>
 
 <div class="flex flex-col h-full w-full items-center justify-center">
+	<input bind:value={txtTitle} type="text" placeholder="Title" class="input w-64 mb-4" />
+	<textarea bind:value={txtBody} placeholder="Title" class="input w-96 mb-4" />
     <button class="btn btn-sm variant-ghost-surface mb-4" on:click={downloadImage}>Download</button>
 	<canvas
 		bind:this={elCanvas}
