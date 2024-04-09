@@ -4,13 +4,12 @@
 	import { arrow, autoUpdate, computePosition, flip, offset, shift } from '@floating-ui/dom';
 	import '@fontsource/abril-fatface';
 	import '@fontsource/inter';
+	import '@fontsource/poppins';
+	import '@fontsource/chewy';
 	import { AppShell, storePopup } from '@skeletonlabs/skeleton';
 	import '../app.pcss';
-	import { onMount } from 'svelte';
 
-	onMount(() => {
-		storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
-	});
+	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 </script>
 
 <AppShell
