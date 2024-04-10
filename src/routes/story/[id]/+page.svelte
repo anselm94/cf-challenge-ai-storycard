@@ -21,9 +21,9 @@
 	];
 
 	let ILLUSTRATION_STYLES = [
-		{ value: 'none', name: 'None' },
-		{ value: 'artistic', name: 'Artistic' },
-		{ value: 'comic', name: 'Comic' }
+		{ value: 'none', name: 'None', bg: ImgIllus },
+		{ value: 'artistic', name: 'Artistic', bg: 'https://i.pravatar.cc/100' },
+		{ value: 'comic', name: 'Comic', bg: 'https://i.pravatar.cc/100' }
 	];
 
 	let elStoryCardPreview: StoryCardPreview | undefined;
@@ -44,7 +44,7 @@
 
 <div>
 	<h1 class="my-8 text-4xl font-extrabold">Story Card</h1>
-	<div class="flex flex-col rounded-lg border xl:flex-row">
+	<div class="flex flex-col overflow-hidden rounded-lg border bg-clip-border xl:flex-row">
 		<div class="flex basis-3/4 flex-col border-b bg-gray-50 xl:border-r">
 			<div class="flex flex-row-reverse border-b bg-white p-4">
 				<Button size="xs" color="alternative" on:click={() => elStoryCardPreview?.downloadImage()}>
@@ -74,29 +74,38 @@
 			</div>
 		</div>
 		<div class="basis-1/4">
-			<div class="py-5 px-4 mb-4 border-b bg-gray-50">
+			<div class="mb-4 overflow-hidden border-b bg-gray-50 px-4 py-5">
 				<h5 class="flex flex-row items-center text-xl font-bold text-gray-800">
 					<SettingsIcon class="me-2 h-5 w-5" /> Tweak
 				</h5>
 			</div>
-			<div class="mx-4 mb-8 flex flex-col rounded-lg border">
+			<div class="mx-4 mb-8 flex flex-col overflow-hidden rounded-lg border">
 				<div class="flex flex-row items-center border-b bg-gray-50 px-4 py-4 text-lg font-medium">
 					<ImageIcon class="me-2 h-5 w-5" /><span class="me-1.5 font-bold">Restyle</span> Story Illustration
 				</div>
-				<div class="grid grid-cols-3 gap-4 px-4 py-4 md:grid-cols-6 lg:grid-cols-10 xl:grid-cols-3">
-					{#each ILLUSTRATION_STYLES as style}
-						<div
-							class="flex h-20 w-20 cursor-pointer flex-row items-center justify-center rounded-lg border text-sm hover:border-primary-300 xl:h-16 xl:w-16 2xl:h-24 2xl:w-24"
-						>
-							{style.name}
-						</div>
-					{/each}
-				</div>
-				<div class="flex flex-row-reverse items-center border-t px-2 py-2">
-					<Button outline color="alternative" size="xs">Apply</Button>
-				</div>
+				<form>
+					<div
+						class="grid grid-cols-3 gap-4 px-4 py-4 md:grid-cols-6 lg:grid-cols-10 xl:grid-cols-3"
+					>
+						{#each ILLUSTRATION_STYLES as style}
+							<label class="hidden" for={style.value}>{style.value}</label>
+							<input
+								class="h-20 w-20 cursor-pointer rounded-lg border bg-cover text-sm checked:bg-cover checked:ring-4 checked:ring-primary-800 xl:h-16 xl:w-16 2xl:h-24 2xl:w-24"
+								type="radio"
+								id={style.value}
+								name="style"
+								value={style.value}
+								style="background-image: url('{style.bg}');"
+								checked={style.value === 'none'}
+							/>
+						{/each}
+					</div>
+					<div class="flex flex-row-reverse items-center border-t px-2 py-2">
+						<Button outline color="alternative" size="xs" type="submit">Apply</Button>
+					</div>
+				</form>
 			</div>
-			<div class="mx-4 mb-8 flex flex-col rounded-lg border">
+			<div class="mx-4 mb-8 flex flex-col overflow-hidden rounded-lg border">
 				<div class="flex flex-row items-center border-b bg-gray-50 px-4 py-4 text-lg font-medium">
 					<TextIcon class="me-2 h-5 w-5" /> <span class="me-1.5 font-bold">Edit</span> Story Text
 				</div>
@@ -121,20 +130,19 @@
 			</div>
 		</div>
 	</div>
-	<form>
-		<Modal title="Translate Story Card" bind:open={isTranslateModalOpen} autoclose>
-			<Label>
-				Select an option
-				<Select
-					class="mt-2"
-					items={LANGUAGES.filter((item) =>
-						translatedLanguages.some((i) => i.value !== item.value)
-					)}
-				/>
-			</Label>
-			<svelte:fragment slot="footer">
-				<Button type="submit">Translate</Button>
-			</svelte:fragment>
-		</Modal>
-	</form>
 </div>
+<form>
+	<Modal title="Translate Story Card" bind:open={isTranslateModalOpen} autoclose>
+		<Label>
+			Select an option
+			<Select
+				name="language"
+				class="mt-2"
+				items={LANGUAGES.filter((item) => translatedLanguages.some((i) => i.value !== item.value))}
+			/>
+		</Label>
+		<svelte:fragment slot="footer">
+			<Button type="submit">Translate</Button>
+		</svelte:fragment>
+	</Modal>
+</form>

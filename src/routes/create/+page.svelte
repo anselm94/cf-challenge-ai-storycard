@@ -69,14 +69,14 @@
 <div>
 	<h1 class="my-8 text-4xl font-extrabold">Create a Story Card</h1>
 	<div class="rounded-lg border">
-		<div class="flex flex-row items-center justify-between border-b bg-gray-100 px-4 py-4">
-			<h2 class="inline-block text-xl font-bold">Define a Narrative</h2>
-			<Button outline color="alternative" size="xs" class="mx-4"
-				><HeadExplodeIcon class="me-2 h-4 w-4" />Surprise Me</Button
-			>
-		</div>
-		<div class="px-8 pb-12 pt-4 text-base font-normal">
-			<form class="flow flow-row block text-lg leading-[4rem]">
+		<form class="flow flow-row block text-lg leading-[4rem]">
+			<div class="flex flex-row items-center justify-between border-b bg-gray-100 px-4 py-4">
+				<h2 class="inline-block text-xl font-bold">Define a Narrative</h2>
+				<Button outline color="alternative" size="xs" class="mx-4"
+					><HeadExplodeIcon class="me-2 h-4 w-4" />Surprise Me</Button
+				>
+			</div>
+			<div class="px-8 pb-12 pt-4 text-base font-normal">
 				Create a
 				<span class="font-bold"> Story Card </span>
 				with a
@@ -105,13 +105,13 @@
 					<Select class="mt-2" items={THEMES} bind:value={selectedTheme} />
 				</Label>
 				.
-			</form>
-		</div>
-		<div class="flex flex-row-reverse border-t bg-gray-100 px-4 py-4">
-			<Button color="primary" on:click={createStoryCard}
-				><MagicWandIcon class="me-2 h-4 w-4" />Create</Button
-			>
-		</div>
+			</div>
+			<div class="flex flex-row-reverse border-t bg-gray-100 px-4 py-4">
+				<Button type="submit" color="primary" on:click={createStoryCard}
+					><MagicWandIcon class="me-2 h-4 w-4" />Create</Button
+				>
+			</div>
+		</form>
 	</div>
 </div>
 
