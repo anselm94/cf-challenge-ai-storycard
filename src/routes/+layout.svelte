@@ -32,7 +32,7 @@
 	<div class="container mx-auto p-8">
 		<div class="my-4">
 			<Breadcrumb aria-label="Default breadcrumb example">
-				{#each $page.data.nav as nav}
+				{#each ($page.data.nav || []) as nav}
 					<BreadcrumbItem href={nav.href} home={nav.href === '/'}>{nav.title}</BreadcrumbItem>
 				{/each}
 			</Breadcrumb>
