@@ -1,9 +1,12 @@
 <script lang="ts">
-	import Button from 'flowbite-svelte/Button.svelte';
-	import Select from 'flowbite-svelte/Select.svelte';
-	import Label from 'flowbite-svelte/Label.svelte';
-	import MagicWandIcon from 'flowbite-svelte-icons/WandMagicSparklesSolid.svelte';
+	import { goto } from '$app/navigation';
 	import HeadExplodeIcon from 'flowbite-svelte-icons/FaceExplodeSolid.svelte';
+	import MagicWandIcon from 'flowbite-svelte-icons/WandMagicSparklesSolid.svelte';
+	import Button from 'flowbite-svelte/Button.svelte';
+	import Label from 'flowbite-svelte/Label.svelte';
+	import Modal from 'flowbite-svelte/Modal.svelte';
+	import Select from 'flowbite-svelte/Select.svelte';
+	import Spinner from 'flowbite-svelte/Spinner.svelte';
 
 	let GENRES = [
 		{ value: 'comedy', name: 'Comedy' },
@@ -48,6 +51,14 @@
 	let selectedLocation = 'forest';
 	let selectedTone = 'scary';
 	let selectedTheme = 'friendship';
+
+	let isCreatingStoryCard = false;
+
+	async function createStoryCard() {
+		isCreatingStoryCard = true;
+		await new Promise((resolve) => setTimeout(resolve, 2000));
+		goto(`/story/123`);
+	}
 </script>
 
 <svelte:head>
@@ -97,7 +108,16 @@
 			</form>
 		</div>
 		<div class="flex flex-row-reverse border-t bg-gray-100 px-4 py-4">
-			<Button color="primary"><MagicWandIcon class="me-2 h-4 w-4" />Create</Button>
+			<Button color="primary" on:click={createStoryCard}
+				><MagicWandIcon class="me-2 h-4 w-4" />Create</Button
+			>
 		</div>
 	</div>
 </div>
+
+<Modal bind:open={isCreatingStoryCard} dismissable={false} size="xs">
+	<div class="flew-row flex items-center justify-center">
+		<Spinner />
+		<p class="ml-4">Creating Story Card ...</p>
+	</div>
+</Modal>

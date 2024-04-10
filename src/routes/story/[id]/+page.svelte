@@ -26,6 +26,8 @@
 		{ value: 'comic', name: 'Comic' }
 	];
 
+	let elStoryCardPreview: StoryCardPreview | undefined;
+
 	export let storyTitleText: string = `The Girl and the Magic Aquarium`;
 	export let storyContentText: string = `Once upon a time, in a quaint little seaside town, lived a curious girl named Mia. One sunny afternoon, she visited the local aquarium for the very first time. As she approached the vast tank filled with colorful fish, her eyes widened in awe. The rainbow-hued angelfish danced gracefully, while the playful clownfish hid among the coral. Mia was mesmerized by the gentle sway of the sea anemone and the graceful glide of the stingrays. She spent hours watching the underwater ballet, her heart filled with wonder and delight. The magic of the aquarium had cast its spell on Mia, igniting a lifelong love for the ocean and its wondrous inhabitants.`;
 	export let storyIllusPath: string = ImgIllus;
@@ -45,8 +47,8 @@
 	<div class="flex flex-col rounded-lg border xl:flex-row">
 		<div class="flex basis-3/4 flex-col border-b bg-gray-50 xl:border-r">
 			<div class="flex flex-row-reverse border-b bg-white p-4">
-				<Button size="xs" color="alternative"
-					><DownloadIcon class="me-2 h-3.5 w-3.5" />Download</Button
+				<Button size="xs" color="alternative" on:click={() => elStoryCardPreview?.downloadImage()}>
+					<DownloadIcon class="me-2 h-3.5 w-3.5" />Download</Button
 				>
 			</div>
 			<div class="flex flex-row justify-center py-4">
@@ -62,21 +64,26 @@
 			</div>
 			<div class="flex flex-row justify-center">
 				<div class="inline-block touch-auto overflow-scroll px-4 py-36">
-					<StoryCardPreview bind:storyTitleText bind:storyContentText bind:storyIllusPath />
+					<StoryCardPreview
+						bind:this={elStoryCardPreview}
+						bind:storyTitleText
+						bind:storyContentText
+						bind:storyIllusPath
+					/>
 				</div>
 			</div>
 		</div>
 		<div class="basis-1/4">
-			<h5 class="flex w-full flex-row items-center px-4 pb-8 pt-8 text-xl font-bold">
-				<SettingsIcon class="me-2 h-5 w-5" /> Tweak
-			</h5>
+			<div class="py-5 px-4 mb-4 border-b bg-gray-50">
+				<h5 class="flex flex-row items-center text-xl font-bold text-gray-800">
+					<SettingsIcon class="me-2 h-5 w-5" /> Tweak
+				</h5>
+			</div>
 			<div class="mx-4 mb-8 flex flex-col rounded-lg border">
 				<div class="flex flex-row items-center border-b bg-gray-50 px-4 py-4 text-lg font-medium">
-					<ImageIcon class="me-2 h-5 w-5" /><span class="me-2 italic">Restyle</span> Story Illustration
+					<ImageIcon class="me-2 h-5 w-5" /><span class="me-1.5 font-bold">Restyle</span> Story Illustration
 				</div>
-				<div
-					class="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-10 xl:grid-cols-3 gap-4 px-4 py-4"
-				>
+				<div class="grid grid-cols-3 gap-4 px-4 py-4 md:grid-cols-6 lg:grid-cols-10 xl:grid-cols-3">
 					{#each ILLUSTRATION_STYLES as style}
 						<div
 							class="flex h-20 w-20 cursor-pointer flex-row items-center justify-center rounded-lg border text-sm hover:border-primary-300 xl:h-16 xl:w-16 2xl:h-24 2xl:w-24"
@@ -91,7 +98,7 @@
 			</div>
 			<div class="mx-4 mb-8 flex flex-col rounded-lg border">
 				<div class="flex flex-row items-center border-b bg-gray-50 px-4 py-4 text-lg font-medium">
-					<TextIcon class="me-2 h-5 w-5" /> Story Text
+					<TextIcon class="me-2 h-5 w-5" /> <span class="me-1.5 font-bold">Edit</span> Story Text
 				</div>
 				<div class="px-4 py-4">
 					<Label for="story-title" class="mb-2 block">Title</Label>

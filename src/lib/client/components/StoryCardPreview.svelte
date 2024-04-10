@@ -28,12 +28,6 @@
 		fCanvas?.renderAll();
 	}
 
-	// $: if (fImageIllus) {
-	//     let url = storyIllusPath;
-	//     url.indexOf('')
-	//     renderIllustration().then(() => fCanvas?.renderAll());
-	// }
-
 	onMount(async () => {
 		fCanvas = new fabric.Canvas(elCanvas, {
 			enableRetinaScaling: true
@@ -108,7 +102,7 @@
 		fCanvas?.renderAll();
 	}
 
-	function downloadImage() {
+	export function downloadImage() {
 		const dataUrl = fCanvas?.toDataURL({ format: 'png', multiplier: 2 });
 		if (dataUrl) {
 			const link = document.createElement('a');
