@@ -1,109 +1,133 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { fabric } from 'fabric';
-    import FontFaceObserver from 'fontfaceobserver';
-	import ImgCardMask from '$lib/images/story-postcard-mask.png';
+	import StoryCardPreview from '$lib/client/components/StoryCardPreview.svelte';
 	import ImgIllus from '$lib/images/storybook-illus.png';
+	import DownloadIcon from 'flowbite-svelte-icons/DownloadSolid.svelte';
+	import ImageIcon from 'flowbite-svelte-icons/ImageSolid.svelte';
+	import TranslateIcon from 'flowbite-svelte-icons/TextSizeOutline.svelte';
+	import SettingsIcon from 'flowbite-svelte-icons/UserSettingsSolid.svelte';
+	import TextIcon from 'flowbite-svelte-icons/LetterItalicOutline.svelte';
+	import Button from 'flowbite-svelte/Button.svelte';
+	import ButtonGroup from 'flowbite-svelte/ButtonGroup.svelte';
+	import Label from 'flowbite-svelte/Label.svelte';
+	import Modal from 'flowbite-svelte/Modal.svelte';
+	import Select from 'flowbite-svelte/Select.svelte';
+	import Input from 'flowbite-svelte/Input.svelte';
+	import Textarea from 'flowbite-svelte/Textarea.svelte';
 
-	let txtTitle: string = `The Girl and the Magic Aquarium`;
-	let txtBody: string = `Once upon a time, in a quaint little seaside town, lived a curious girl named Mia. One sunny afternoon, she visited the local aquarium for the very first time. As she approached the vast tank filled with colorful fish, her eyes widened in awe. The rainbow-hued angelfish danced gracefully, while the playful clownfish hid among the coral. Mia was mesmerized by the gentle sway of the sea anemone and the graceful glide of the stingrays. She spent hours watching the underwater ballet, her heart filled with wonder and delight. The magic of the aquarium had cast its spell on Mia, igniting a lifelong love for the ocean and its wondrous inhabitants.`;
+	let LANGUAGES = [
+		{ value: 'en', name: 'English' },
+		{ value: 'de', name: 'German' },
+		{ value: 'es', name: 'Spanish' }
+	];
 
-	let elCanvas: HTMLCanvasElement;
-	let fabricCanvas: fabric.Canvas | undefined;
-	let txtbxStoryTitle: fabric.Textbox | undefined;
-	let txtbxStoryBody: fabric.Textbox | undefined;
+	let ILLUSTRATION_STYLES = [
+		{ value: 'none', name: 'None' },
+		{ value: 'artistic', name: 'Artistic' },
+		{ value: 'comic', name: 'Comic' }
+	];
 
-	$: if (txtbxStoryTitle) {
-		txtbxStoryTitle.text = txtTitle;
-		fabricCanvas?.renderAll();
-	}
+	export let storyTitleText: string = `The Girl and the Magic Aquarium`;
+	export let storyContentText: string = `Once upon a time, in a quaint little seaside town, lived a curious girl named Mia. One sunny afternoon, she visited the local aquarium for the very first time. As she approached the vast tank filled with colorful fish, her eyes widened in awe. The rainbow-hued angelfish danced gracefully, while the playful clownfish hid among the coral. Mia was mesmerized by the gentle sway of the sea anemone and the graceful glide of the stingrays. She spent hours watching the underwater ballet, her heart filled with wonder and delight. The magic of the aquarium had cast its spell on Mia, igniting a lifelong love for the ocean and its wondrous inhabitants.`;
+	export let storyIllusPath: string = ImgIllus;
 
-	$: if (txtbxStoryBody) {
-		txtbxStoryBody.text = txtBody;
-		fabricCanvas?.renderAll();
-	}
+	let translatedLanguages = [{ value: 'en', name: 'English' }];
 
-	const fabricLoadImage = (url: string) =>
-		new Promise<fabric.Image>((resolve) => fabric.Image.fromURL(url, (img) => resolve(img)));
-
-	onMount(async () => {
-		fabricCanvas = new fabric.Canvas(elCanvas, {
-			enableRetinaScaling: true
-		});
-
-        await new FontFaceObserver('Chewy').load();
-        await new FontFaceObserver('Poppins').load();
-
-		const imgGrungeBorder = await fabricLoadImage(ImgCardMask);
-        imgGrungeBorder.left = 0;
-        imgGrungeBorder.top = 0;
-		imgGrungeBorder.selectable = false;
-
-        const imgIllus = await fabricLoadImage(ImgIllus)
-        imgIllus.left = 0;
-        imgIllus.top = 0;
-        imgIllus.scaleToHeight(480);
-        imgIllus.selectable = false;
-
-		// fabricCanvas.skipTargetFind = true; // disable interaction
-		txtbxStoryTitle = new fabric.Textbox(txtTitle, {
-			left: 360,
-			top: 24,
-			width: 360,
-			fontSize: 22,
-			fontFamily: 'Chewy',
-			fill: '#6B4600',
-			textAlign: 'center',
-			editable: false,
-			selectable: false
-		});
-
-		txtbxStoryBody = new fabric.Textbox(txtBody, {
-			left: 380,
-			top: 65,
-			width: 320,
-			height: 420,
-			fontSize: 15,
-			isWrapping: true,
-			editable: false,
-			selectable: false,
-			fontFamily: 'Poppins',
-			fill: '#6B4600',
-			lineHeight: 1.3,
-			textAlign: 'center'
-		});
-
-		fabricCanvas?.add(imgIllus);
-		fabricCanvas?.add(imgGrungeBorder);
-		fabricCanvas?.add(txtbxStoryTitle);
-		fabricCanvas?.add(txtbxStoryBody);
-
-        // txtbxStoryBody.centerV()
-        
-		fabricCanvas?.renderAll();
-	});
-
-    function downloadImage() {
-        const dataUrl = fabricCanvas?.toDataURL({ format: 'png', multiplier: 2 });
-        if (dataUrl) {
-            const link = document.createElement('a');
-            link.href = dataUrl;
-            link.download = 'storybook.png';
-            link.click();
-            link.remove();
-        }
-    }
+	let isTranslateModalOpen = false;
 </script>
 
-<div class="flex flex-col h-full w-full items-center justify-center">
-	<input bind:value={txtTitle} type="text" placeholder="Title" class="input w-64 mb-4" />
-	<textarea bind:value={txtBody} placeholder="Title" class="input w-96 mb-4" />
-    <button class="btn btn-sm variant-ghost-surface mb-4" on:click={downloadImage}>Download</button>
-	<canvas
-		bind:this={elCanvas}
-		id="card-editor"
-		width="720"
-		height="480"
-		class="w-24 border-2 border-primary-900"
-	></canvas>
+<svelte:head>
+	<title>Edit and Download Story Card</title>
+	<meta name="description" content="Edit, translate, transform and download your Story Card" />
+</svelte:head>
+
+<div>
+	<h1 class="my-8 text-4xl font-extrabold">Story Card</h1>
+	<div class="flex flex-col rounded-lg border xl:flex-row">
+		<div class="flex basis-3/4 flex-col border-b bg-gray-50 xl:border-r">
+			<div class="flex flex-row-reverse border-b bg-white p-4">
+				<Button size="xs" color="alternative"
+					><DownloadIcon class="me-2 h-3.5 w-3.5" />Download</Button
+				>
+			</div>
+			<div class="flex flex-row justify-center py-4">
+				<ButtonGroup>
+					{#each translatedLanguages as lang}
+						<Button>{lang.name}</Button>
+					{/each}
+					<Button color="light" class="bg-gray-200" on:click={() => (isTranslateModalOpen = true)}>
+						<TranslateIcon class="me-2 h-4 w-4" />
+						Add translation
+					</Button>
+				</ButtonGroup>
+			</div>
+			<div class="flex flex-row justify-center">
+				<div class="inline-block touch-auto overflow-scroll px-4 py-36">
+					<StoryCardPreview bind:storyTitleText bind:storyContentText bind:storyIllusPath />
+				</div>
+			</div>
+		</div>
+		<div class="basis-1/4">
+			<h5 class="flex w-full flex-row items-center px-4 pb-8 pt-8 text-xl font-bold">
+				<SettingsIcon class="me-2 h-5 w-5" /> Tweak
+			</h5>
+			<div class="mx-4 mb-8 flex flex-col rounded-lg border">
+				<div class="flex flex-row items-center border-b bg-gray-50 px-4 py-4 text-lg font-medium">
+					<ImageIcon class="me-2 h-5 w-5" /><span class="me-2 italic">Restyle</span> Story Illustration
+				</div>
+				<div
+					class="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-10 xl:grid-cols-3 gap-4 px-4 py-4"
+				>
+					{#each ILLUSTRATION_STYLES as style}
+						<div
+							class="flex h-20 w-20 cursor-pointer flex-row items-center justify-center rounded-lg border text-sm hover:border-primary-300 xl:h-16 xl:w-16 2xl:h-24 2xl:w-24"
+						>
+							{style.name}
+						</div>
+					{/each}
+				</div>
+				<div class="flex flex-row-reverse items-center border-t px-2 py-2">
+					<Button outline color="alternative" size="xs">Apply</Button>
+				</div>
+			</div>
+			<div class="mx-4 mb-8 flex flex-col rounded-lg border">
+				<div class="flex flex-row items-center border-b bg-gray-50 px-4 py-4 text-lg font-medium">
+					<TextIcon class="me-2 h-5 w-5" /> Story Text
+				</div>
+				<div class="px-4 py-4">
+					<Label for="story-title" class="mb-2 block">Title</Label>
+					<Input
+						id="story-title"
+						placeholder="Story Title"
+						type="text"
+						bind:value={storyTitleText}
+					/>
+				</div>
+				<div class="px-4 py-4">
+					<Label for="story-content" class="mb-2 block">Content</Label>
+					<Textarea
+						id="story-content"
+						placeholder="Story Content"
+						class="h-56 lg:h-36 xl:h-80"
+						bind:value={storyContentText}
+					/>
+				</div>
+			</div>
+		</div>
+	</div>
+	<form>
+		<Modal title="Translate Story Card" bind:open={isTranslateModalOpen} autoclose>
+			<Label>
+				Select an option
+				<Select
+					class="mt-2"
+					items={LANGUAGES.filter((item) =>
+						translatedLanguages.some((i) => i.value !== item.value)
+					)}
+				/>
+			</Label>
+			<svelte:fragment slot="footer">
+				<Button type="submit">Translate</Button>
+			</svelte:fragment>
+		</Modal>
+	</form>
 </div>

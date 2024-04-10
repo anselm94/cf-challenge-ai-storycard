@@ -6,6 +6,10 @@ export const load: PageLoad = function () {
 			{
 				title: 'Home',
 				href: '/'
+			},
+			{
+				title: 'Create',
+				href: '/create'
 			}
 		]
 	};

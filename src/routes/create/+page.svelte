@@ -1,72 +1,103 @@
-<div class="p-8">
-	<h2 class="h2 pb-12">Create a Story Card</h2>
-	<form>
-		<p class="flex-row text-xl leading-[5rem]">
-			<span>Write a </span>
-			<label class="label inline">
-				<span class="hidden">Genre</span>
-				<select class="select inline w-auto text-xl">
-					<option value="fantasy">fantasy story</option>
-					<option value="science fiction">science fiction story</option>
-					<option value="comedy">comedy story</option>
-					<option value="poetry">poetry story</option>
-					<option value="adventure">adventure story</option>
-					<option value="historical fantasy">historical fantasy story</option>
-				</select>
-			</label>
-			<span> about a </span>
-			<label class="label inline">
-				<span class="hidden">Character</span>
-				<select class="select inline w-auto text-xl">
-					<option value="science fiction">dragon</option>
-					<option value="poetry">robot</option>
-					<option value="fantasy">animal</option>
-					<option value="comedy">unicorn</option>
-					<option value="adventure">alien</option>
-					<option value="historical fantasy">superhero</option>
-					<option value="historical fantasy">prince</option>
-					<option value="historical fantasy">princess</option>
-				</select>
-			</label>
-			<span> who lives in a </span>
-			<label class="label inline">
-				<span class="hidden">Setting</span>
-				<select class="select inline w-auto pr-10 text-xl">
-					<option value="comedy">forest</option>
-					<option value="fantasy">space</option>
-					<option value="science fiction">underwater</option>
-					<option value="poetry">city</option>
-					<option value="adventure">castle</option>
-					<option value="historical fantasy">school</option>
-				</select>
-			</label>
-			<span>. The story should have a </span>
-			<label class="label inline">
-				<span class="hidden">Mood</span>
-				<select class="select inline w-auto pr-10 text-xl">
-					<option value="fantasy">scary</option>
-					<option value="science fiction">funny</option>
-					<option value="comedy">adventurous</option>
-					<option value="poetry">mysterious</option>
-					<option value="adventure">magical</option>
-				</select>
-			</label>
-			<span> tone and revolve around a theme of </span>
-			<label class="label inline">
-				<span class="hidden">Theme</span>
-				<select class="select inline w-auto pr-10 text-xl">
-					<option value="fantasy">friendship</option>
-					<option value="science fiction">bravery</option>
-					<option value="comedy">adventure</option>
-					<option value="poetry">love</option>
-					<option value="adventure">magic</option>
-				</select>
-			</label>
-			<span>.</span>
-		</p>
-		<div class="border-none w-full p-4 flex flex-row-reverse border-primary-900">
-			<button class="btn inline-block variant-filled-primary mx-4">Create</button>
-			<button class="btn inline-block variant-ghost-primary">Surprise Me</button>
+<script lang="ts">
+	import Button from 'flowbite-svelte/Button.svelte';
+	import Select from 'flowbite-svelte/Select.svelte';
+	import Label from 'flowbite-svelte/Label.svelte';
+	import MagicWandIcon from 'flowbite-svelte-icons/WandMagicSparklesSolid.svelte';
+	import HeadExplodeIcon from 'flowbite-svelte-icons/FaceExplodeSolid.svelte';
+
+	let GENRES = [
+		{ value: 'comedy', name: 'Comedy' },
+		{ value: 'fantasy', name: 'Fantasy' },
+		{ value: 'science fiction', name: 'Science Fiction' }
+	];
+	let CHARACTERS = [
+		{ value: 'dragon', name: 'Dragon' },
+		{ value: 'robot', name: 'Robot' },
+		{ value: 'animal', name: 'Animal' },
+		{ value: 'unicorn', name: 'Unicorn' },
+		{ value: 'alien', name: 'Alien' },
+		{ value: 'superhero', name: 'Superhero' },
+		{ value: 'prince', name: 'Prince' },
+		{ value: 'princess', name: 'Princess' }
+	];
+	let LOCATIONS = [
+		{ value: 'forest', name: 'Forest' },
+		{ value: 'space', name: 'Space' },
+		{ value: 'underwater', name: 'Underwater' },
+		{ value: 'city', name: 'City' },
+		{ value: 'castle', name: 'Castle' },
+		{ value: 'school', name: 'School' }
+	];
+	let TONES = [
+		{ value: 'scary', name: 'Scary' },
+		{ value: 'funny', name: 'Funny' },
+		{ value: 'adventurous', name: 'Adventurous' },
+		{ value: 'mysterious', name: 'Mysterious' },
+		{ value: 'magical', name: 'Magical' }
+	];
+	let THEMES = [
+		{ value: 'friendship', name: 'Friendship' },
+		{ value: 'bravery', name: 'Bravery' },
+		{ value: 'adventure', name: 'Adventure' },
+		{ value: 'love', name: 'Love' },
+		{ value: 'deception', name: 'Deception' }
+	];
+
+	let selectedGenre = 'comedy';
+	let selectedCharacter = 'dragon';
+	let selectedLocation = 'forest';
+	let selectedTone = 'scary';
+	let selectedTheme = 'friendship';
+</script>
+
+<svelte:head>
+	<title>Create a Story Card</title>
+	<meta name="description" content="Create a Story Card using AI with illustrations" />
+</svelte:head>
+
+<div>
+	<h1 class="my-8 text-4xl font-extrabold">Create a Story Card</h1>
+	<div class="rounded-lg border">
+		<div class="flex flex-row items-center justify-between border-b bg-gray-100 px-4 py-4">
+			<h2 class="inline-block text-xl font-bold">Define a Narrative</h2>
+			<Button outline color="alternative" size="xs" class="mx-4"
+				><HeadExplodeIcon class="me-2 h-4 w-4" />Surprise Me</Button
+			>
 		</div>
-	</form>
+		<div class="px-8 pb-12 pt-4 text-base font-normal">
+			<form class="flow flow-row block text-lg leading-[4rem]">
+				Create a
+				<span class="font-bold"> Story Card </span>
+				with a
+				<Label defaultClass="inline-block">
+					<span class="hidden">Genre</span>
+					<Select class="mt-2" items={GENRES} bind:value={selectedGenre} />
+				</Label>
+				story, about a
+				<Label defaultClass="inline-block">
+					<span class="hidden">Character</span>
+					<Select class="mt-2" items={CHARACTERS} bind:value={selectedCharacter} />
+				</Label>
+				who lives in a
+				<Label defaultClass="inline-block">
+					<span class="hidden">Setting</span>
+					<Select class="mt-2" items={LOCATIONS} bind:value={selectedLocation} />
+				</Label>
+				. The story should have a
+				<Label defaultClass="inline-block">
+					<span class="hidden">Tone</span>
+					<Select class="mt-2" items={TONES} bind:value={selectedTone} />
+				</Label>
+				tone and revolve around the theme of
+				<Label defaultClass="inline-block">
+					<span class="hidden">Theme</span>
+					<Select class="mt-2" items={THEMES} bind:value={selectedTheme} />
+				</Label>
+				.
+			</form>
+		</div>
+		<div class="flex flex-row-reverse border-t bg-gray-100 px-4 py-4">
+			<Button color="primary"><MagicWandIcon class="me-2 h-4 w-4" />Create</Button>
+		</div>
+	</div>
 </div>

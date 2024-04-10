@@ -1,26 +1,22 @@
-import { join } from 'path';
-import { skeleton } from '@skeletonlabs/tw-plugin';
 import forms from '@tailwindcss/forms';
+import flowbite from 'flowbite/plugin';
+import colors from 'tailwindcss/colors';
 
 /** @type {import('tailwindcss').Config}*/
 const config = {
-	// 2. Opt for dark mode to be handled via the class method
 	darkMode: 'class',
 	content: [
 		'./src/**/*.{html,js,svelte,ts}',
-		// 3. Append the path to the Skeleton package
-		join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}')
+		'./node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}'
 	],
 	theme: {
-		extend: {}
+		extend: {
+			colors: {
+				primary: colors.neutral,
+			}
+		}
 	},
-	plugins: [
-		forms,
-		// 4. Append the Skeleton plugin (after other plugins)
-		skeleton({
-			themes: { preset: ['vintage'] }
-		})
-	]
+	plugins: [forms, flowbite]
 };
 
 export default config;
