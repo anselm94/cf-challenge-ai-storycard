@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { invalidateAll } from '$app/navigation';
 	import StoryCardPreview from '$lib/client/components/StoryCardPreview.svelte';
 	import DownloadIcon from 'flowbite-svelte-icons/DownloadSolid.svelte';
 	import TranslateIcon from 'flowbite-svelte-icons/TextSizeOutline.svelte';
@@ -9,6 +10,7 @@
 	import Label from 'flowbite-svelte/Label.svelte';
 	import Modal from 'flowbite-svelte/Modal.svelte';
 	import Select from 'flowbite-svelte/Select.svelte';
+	import Spinner from 'flowbite-svelte/Spinner.svelte';
 	import Textarea from 'flowbite-svelte/Textarea.svelte';
 	import type { PageData } from './$types';
 	import type { LangCode } from './+page.server';
@@ -19,6 +21,7 @@
 		{ value: 'en', name: 'English' },
 		{ value: 'de', name: 'German' },
 		{ value: 'es', name: 'Spanish' },
+		{ value: 'pt', name: 'Portuguese' }
 	];
 
 	let ILLUSTRATION_STYLES = [
@@ -30,18 +33,47 @@
 	let elStoryCardPreview: StoryCardPreview | undefined;
 
 	let selLanguage: LangCode = 'en';
+	let selTranslateLanguage: LangCode = 'en';
 
-	$: storyTitleText = data.data.text[selLanguage].title;
-	$: storyContentText = data.data.text[selLanguage].content;
+	let storyTitleText = data.data.text[selLanguage].title;
+	let storyContentText = data.data.text[selLanguage].content;
+
 	$: selIllustrationStyle = data.data.illustration.selectedStyle;
 	$: storyIllusUrl = data.data.illustration.styles[selIllustrationStyle].url;
-
-	let translatedLanguages = Object.keys(data.data.text);
+	$: storyLanguages = Object.keys(data.data.text);
 
 	let isTranslateModalOpen = false;
+	let isTaskInProgress = false;
 
-	async function translateToLanguage(lang: string) {
+	async function selectLanguage(lang: string) {
 		selLanguage = lang as LangCode;
+		storyTitleText = data.data.text[selLanguage].title;
+		storyContentText = data.data.text[selLanguage].content;
+	}
+
+	async function taskTranslateLanguage() {
+		isTaskInProgress = true;
+		await self.fetch(`/story/${data.data.id}`, {
+			method: 'POST',
+			body: JSON.stringify({ type: 'translate', language: selTranslateLanguage })
+		});
+		isTaskInProgress = false;
+		return invalidateAll();
+	}
+
+	async function taskUpdateText() {
+		isTaskInProgress = true;
+		await self.fetch(`/story/${data.data.id}`, {
+			method: 'POST',
+			body: JSON.stringify({
+				type: 'update-text',
+				language: selLanguage,
+				storyTitle: storyTitleText,
+				storyContent: storyContentText
+			})
+		});
+		isTaskInProgress = false;
+		return invalidateAll();
 	}
 </script>
 
@@ -61,10 +93,10 @@
 			</div>
 			<div class="flex flex-row justify-center py-4">
 				<ButtonGroup>
-					{#each translatedLanguages as lang}
+					{#each storyLanguages as lang}
 						<Button
 							color={lang === selLanguage ? 'primary' : 'light'}
-							on:click={() => translateToLanguage(lang)}
+							on:click={() => selectLanguage(lang)}
 							>{LANGUAGES.filter((l) => l.value === lang)[0].name}</Button
 						>
 					{/each}
@@ -78,8 +110,8 @@
 				<div class="inline-block touch-auto overflow-scroll px-4 py-16">
 					<StoryCardPreview
 						bind:this={elStoryCardPreview}
-						bind:storyTitleText={storyTitleText}
-						bind:storyContentText={storyContentText}
+						bind:storyTitleText
+						bind:storyContentText
 						bind:storyIllusPath={storyIllusUrl}
 					/>
 				</div>
@@ -95,7 +127,7 @@
 				<div class="flex flex-row items-center py-4 text-lg font-medium">
 					<span class="me-1.5 font-bold">Restyle</span> Illustration
 				</div>
-				<form>
+				<form method="post" action="?/update-illustration-style">
 					<div class="grid grid-cols-3 gap-4 pb-4 md:grid-cols-6 lg:grid-cols-10 xl:grid-cols-3">
 						{#each ILLUSTRATION_STYLES as style}
 							<label class="hidden" for={style.value}>{style.value}</label>
@@ -103,7 +135,7 @@
 								class="h-20 w-20 cursor-pointer rounded-lg border bg-cover text-sm checked:bg-cover checked:ring-4 checked:ring-primary-800 xl:h-16 xl:w-16 2xl:h-24 2xl:w-24"
 								type="radio"
 								id={style.value}
-								name="style"
+								name="illustration-style"
 								value={style.value}
 								style="background-image: url('{style.bg}');"
 								checked={style.value === selIllustrationStyle}
@@ -115,52 +147,58 @@
 					</div>
 				</form>
 			</div>
-			<div class="mx-4 flex mb-4 flex-col">
+			<div class="mx-4 mb-4 flex flex-col">
 				<div class="flex flex-row items-center py-4 text-lg font-medium">
 					<span class="me-1.5 font-bold">Edit</span> Text
 				</div>
-				<form method="post" action="?/update-text">
-					<input type="hidden" name="language" value={selLanguage} />
-					<div class="pb-4">
-						<Label for="story-title" class="mb-2 block">Title</Label>
-						<Input
-							id="story-title"
-							name="story-title"
-							placeholder="Story Title"
-							type="text"
-							value={storyTitleText}
-						/>
-					</div>
-					<div class="py-4">
-						<Label for="story-content" class="mb-2 block">Content</Label>
-						<Textarea
-							id="story-content"
-							name="story-content"
-							placeholder="Story Content"
-							class="h-56 lg:h-36 xl:h-80"
-							value={storyContentText}
-						/>
-					</div>
-					<div class="flex flex-row-reverse items-center px-2">
-						<Button outline color="alternative" size="xs" type="submit">Save</Button>
-					</div>
-				</form>
+				<input type="hidden" name="language" value={selLanguage} />
+				<div class="pb-4">
+					<Label for="story-title" class="mb-2 block">Title</Label>
+					<Input
+						id="story-title"
+						name="story-title"
+						placeholder="Story Title"
+						type="text"
+						bind:value={storyTitleText}
+					/>
+				</div>
+				<div class="py-4">
+					<Label for="story-content" class="mb-2 block">Content</Label>
+					<Textarea
+						id="story-content"
+						name="story-content"
+						placeholder="Story Content"
+						class="h-56 lg:h-36 xl:h-80"
+						bind:value={storyContentText}
+					/>
+				</div>
+				<div class="flex flex-row-reverse items-center px-2">
+					<Button outline color="alternative" size="xs" type="submit" on:click={taskUpdateText}
+						>Save</Button
+					>
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
-<form>
-	<Modal title="Translate Story Card" bind:open={isTranslateModalOpen} autoclose>
-		<Label>
-			Select an option
-			<Select
-				name="language"
-				class="mt-2"
-				items={LANGUAGES.filter((item) => !translatedLanguages.includes(item.value))}
-			/>
-		</Label>
-		<svelte:fragment slot="footer">
-			<Button type="submit">Translate</Button>
-		</svelte:fragment>
-	</Modal>
-</form>
+<Modal title="Translate Story Card" bind:open={isTranslateModalOpen} autoclose>
+	<Label>
+		Select Language
+		<Select
+			name="language"
+			class="mt-2"
+			items={LANGUAGES.filter((item) => !storyLanguages.includes(item.value))}
+			bind:value={selTranslateLanguage}
+		/>
+	</Label>
+	<svelte:fragment slot="footer">
+		<Button on:click={taskTranslateLanguage}>Translate</Button>
+	</svelte:fragment>
+</Modal>
+
+<Modal open={isTaskInProgress} dismissable={false} size="xs">
+	<div class="flew-row flex items-center justify-center">
+		<Spinner />
+		<p class="ml-4">In Progress ...</p>
+	</div>
+</Modal>

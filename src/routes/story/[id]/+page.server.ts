@@ -71,7 +71,7 @@ export const load: PageServerLoad = async function ({ platform, params }) {
 };
 
 export const actions = {
-	["update-text"]: async ({ params, platform, request }) => {
+	['update-text']: async ({ params, platform, request }) => {
 		const data = await request.formData();
 		const language = data.get('language') as string;
 		const storyTitle = data.get('story-title') as string;
@@ -86,5 +86,24 @@ export const actions = {
 			};
 		}
 		await platform?.env.KV.put(key, JSON.stringify(storyData));
-	}
+	},
+	['update-illustration-style']: async ({ params, platform, request }) => {
+		const data = await request.formData();
+		const illustrationStyle = data.get('illustration-style') as IllustrationStyle;
+
+		const key = `story#${params.id}`;
+		const storyData = await platform?.env.KV.get<StoryData>(key, 'json');
+
+		if (storyData) {
+			storyData.illustration.selectedStyle = illustrationStyle;
+
+			// generate image and set url only if style is not available already
+			if (!Object.keys(storyData.illustration.styles).includes(illustrationStyle)) {
+				storyData.illustration.styles[illustrationStyle] = {
+					url: storyData.illustration.styles.none.url // TODO generate image
+				};
+			}
+		}
+		await platform?.env.KV.put(key, JSON.stringify(storyData));
+	},
 } satisfies Actions;
