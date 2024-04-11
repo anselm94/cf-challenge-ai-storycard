@@ -2,16 +2,14 @@
 	import StoryCardPreview from '$lib/client/components/StoryCardPreview.svelte';
 	import ImgIllus from '$lib/images/storybook-illus.png';
 	import DownloadIcon from 'flowbite-svelte-icons/DownloadSolid.svelte';
-	import ImageIcon from 'flowbite-svelte-icons/ImageSolid.svelte';
 	import TranslateIcon from 'flowbite-svelte-icons/TextSizeOutline.svelte';
 	import SettingsIcon from 'flowbite-svelte-icons/UserSettingsSolid.svelte';
-	import TextIcon from 'flowbite-svelte-icons/LetterItalicOutline.svelte';
 	import Button from 'flowbite-svelte/Button.svelte';
 	import ButtonGroup from 'flowbite-svelte/ButtonGroup.svelte';
+	import Input from 'flowbite-svelte/Input.svelte';
 	import Label from 'flowbite-svelte/Label.svelte';
 	import Modal from 'flowbite-svelte/Modal.svelte';
 	import Select from 'flowbite-svelte/Select.svelte';
-	import Input from 'flowbite-svelte/Input.svelte';
 	import Textarea from 'flowbite-svelte/Textarea.svelte';
 
 	let LANGUAGES = [
@@ -32,9 +30,17 @@
 	export let storyContentText: string = `Once upon a time, in a quaint little seaside town, lived a curious girl named Mia. One sunny afternoon, she visited the local aquarium for the very first time. As she approached the vast tank filled with colorful fish, her eyes widened in awe. The rainbow-hued angelfish danced gracefully, while the playful clownfish hid among the coral. Mia was mesmerized by the gentle sway of the sea anemone and the graceful glide of the stingrays. She spent hours watching the underwater ballet, her heart filled with wonder and delight. The magic of the aquarium had cast its spell on Mia, igniting a lifelong love for the ocean and its wondrous inhabitants.`;
 	export let storyIllusPath: string = ImgIllus;
 
-	let translatedLanguages = [{ value: 'en', name: 'English' }];
+	let translatedLanguages = [
+		{ value: 'en', name: 'English' },
+		{ value: 'de', name: 'German' }
+	];
+	let currentLanguage = 'en';
 
 	let isTranslateModalOpen = false;
+
+	async function translateToLanguage(lang: string) {
+		currentLanguage = lang;
+	}
 </script>
 
 <svelte:head>
@@ -54,7 +60,10 @@
 			<div class="flex flex-row justify-center py-4">
 				<ButtonGroup>
 					{#each translatedLanguages as lang}
-						<Button>{lang.name}</Button>
+						<Button
+							color={lang.value === currentLanguage ? 'primary' : 'light'}
+							on:click={() => translateToLanguage(lang.value)}>{lang.name}</Button
+						>
 					{/each}
 					<Button color="light" class="bg-gray-200" on:click={() => (isTranslateModalOpen = true)}>
 						<TranslateIcon class="me-2 h-4 w-4" />
@@ -74,19 +83,17 @@
 			</div>
 		</div>
 		<div class="basis-1/4">
-			<div class="mb-4 overflow-hidden border-b bg-gray-50 px-4 py-5">
+			<div class="overflow-hidden border-b bg-gray-50 px-4 py-4">
 				<h5 class="flex flex-row items-center text-xl font-bold text-gray-800">
 					<SettingsIcon class="me-2 h-5 w-5" /> Tweak
 				</h5>
 			</div>
-			<div class="mx-4 mb-8 flex flex-col overflow-hidden rounded-lg border">
-				<div class="flex flex-row items-center border-b bg-gray-50 px-4 py-4 text-lg font-medium">
-					<ImageIcon class="me-2 h-5 w-5" /><span class="me-1.5 font-bold">Restyle</span> Story Illustration
+			<div class="mx-4 flex flex-col border-b">
+				<div class="flex flex-row items-center py-4 text-lg font-medium">
+					<span class="me-1.5 font-bold">Restyle</span> Illustration
 				</div>
 				<form>
-					<div
-						class="grid grid-cols-3 gap-4 px-4 py-4 md:grid-cols-6 lg:grid-cols-10 xl:grid-cols-3"
-					>
+					<div class="grid grid-cols-3 gap-4 pb-4 md:grid-cols-6 lg:grid-cols-10 xl:grid-cols-3">
 						{#each ILLUSTRATION_STYLES as style}
 							<label class="hidden" for={style.value}>{style.value}</label>
 							<input
@@ -100,16 +107,16 @@
 							/>
 						{/each}
 					</div>
-					<div class="flex flex-row-reverse items-center border-t px-2 py-2">
+					<div class="flex flex-row-reverse items-center px-2 py-2">
 						<Button outline color="alternative" size="xs" type="submit">Apply</Button>
 					</div>
 				</form>
 			</div>
-			<div class="mx-4 mb-8 flex flex-col overflow-hidden rounded-lg border">
-				<div class="flex flex-row items-center border-b bg-gray-50 px-4 py-4 text-lg font-medium">
-					<TextIcon class="me-2 h-5 w-5" /> <span class="me-1.5 font-bold">Edit</span> Story Text
+			<div class="mx-4 flex flex-col">
+				<div class="flex flex-row items-center py-4 text-lg font-medium">
+					<span class="me-1.5 font-bold">Edit</span> Text
 				</div>
-				<div class="px-4 py-4">
+				<div class="pb-4">
 					<Label for="story-title" class="mb-2 block">Title</Label>
 					<Input
 						id="story-title"
@@ -118,7 +125,7 @@
 						bind:value={storyTitleText}
 					/>
 				</div>
-				<div class="px-4 py-4">
+				<div class="py-4">
 					<Label for="story-content" class="mb-2 block">Content</Label>
 					<Textarea
 						id="story-content"

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { fabric } from 'fabric';
+	import { fabric } from 'fabric-pure-browser';
 	import FontFaceObserver from 'fontfaceobserver';
 	import ImgCardMask from '$lib/images/story-postcard-mask.png';
 
