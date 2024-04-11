@@ -37,9 +37,9 @@
 
 	let storyTitleText = data.data.text[selLanguage].title;
 	let storyContentText = data.data.text[selLanguage].content;
+	let selIllustrationStyle = data.data.illustration.selectedStyle;
+	let storyIllusUrl = data.data.illustration.styles[selIllustrationStyle].url;
 
-	$: selIllustrationStyle = data.data.illustration.selectedStyle;
-	$: storyIllusUrl = data.data.illustration.styles[selIllustrationStyle].url;
 	$: storyLanguages = Object.keys(data.data.text);
 
 	let isTranslateModalOpen = false;
@@ -70,6 +70,19 @@
 				language: selLanguage,
 				storyTitle: storyTitleText,
 				storyContent: storyContentText
+			})
+		});
+		isTaskInProgress = false;
+		return invalidateAll();
+	}
+
+	async function taskUpdateIllusStyle() {
+		isTaskInProgress = true;
+		await self.fetch(`/story/${data.data.id}`, {
+			method: 'POST',
+			body: JSON.stringify({
+				type: 'update-illus-style',
+				illustrationStyle: selIllustrationStyle
 			})
 		});
 		isTaskInProgress = false;
@@ -127,25 +140,26 @@
 				<div class="flex flex-row items-center py-4 text-lg font-medium">
 					<span class="me-1.5 font-bold">Restyle</span> Illustration
 				</div>
-				<form method="post" action="?/update-illustration-style">
-					<div class="grid grid-cols-3 gap-4 pb-4 md:grid-cols-6 lg:grid-cols-10 xl:grid-cols-3">
-						{#each ILLUSTRATION_STYLES as style}
-							<label class="hidden" for={style.value}>{style.value}</label>
-							<input
-								class="h-20 w-20 cursor-pointer rounded-lg border bg-cover text-sm checked:bg-cover checked:ring-4 checked:ring-primary-800 xl:h-16 xl:w-16 2xl:h-24 2xl:w-24"
-								type="radio"
-								id={style.value}
-								name="illustration-style"
-								value={style.value}
-								style="background-image: url('{style.bg}');"
-								checked={style.value === selIllustrationStyle}
-							/>
-						{/each}
-					</div>
-					<div class="flex flex-row-reverse items-center px-2 pb-4 pt-2">
-						<Button outline color="alternative" size="xs" type="submit">Apply</Button>
-					</div>
-				</form>
+				<div class="grid grid-cols-3 gap-4 pb-4 md:grid-cols-6 lg:grid-cols-10 xl:grid-cols-3">
+					{#each ILLUSTRATION_STYLES as style}
+						<label class="hidden" for={style.value}>{style.value}</label>
+						<input
+							class="h-20 w-20 cursor-pointer rounded-lg border bg-cover text-sm checked:bg-cover checked:ring-4 checked:ring-primary-800 xl:h-16 xl:w-16 2xl:h-24 2xl:w-24"
+							type="radio"
+							id={style.value}
+							name="illustration-style"
+							bind:group={selIllustrationStyle}
+							value={style.value}
+							style="background-image: url('{style.bg}');"
+							checked={style.value === selIllustrationStyle}
+						/>
+					{/each}
+				</div>
+				<div class="flex flex-row-reverse items-center px-2 pb-4 pt-2">
+					<Button outline color="alternative" size="xs" on:click={taskUpdateIllusStyle}
+						>Apply</Button
+					>
+				</div>
 			</div>
 			<div class="mx-4 mb-4 flex flex-col">
 				<div class="flex flex-row items-center py-4 text-lg font-medium">
