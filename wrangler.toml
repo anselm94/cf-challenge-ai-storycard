@@ -1,2 +1,2 @@
-name = "cf-challenge-storycard"
+name = "cf-challenge-ai-storycard"
 pages_build_output_dir = ".svelte-kit/cloudflare"
