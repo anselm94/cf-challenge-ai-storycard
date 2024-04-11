@@ -11,6 +11,7 @@ declare global {
 		interface Platform {
 			env: {
 				KV: KVNamespace;
+				R2: R2Bucket;
 			};
 		}
 	}

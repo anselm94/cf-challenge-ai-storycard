@@ -1,6 +1,10 @@
 name = "cf-challenge-ai-storycard"
-pages_build_output_dir = ".svelte-kit/cloudflare"
+# pages_build_output_dir = ".svelte-kit/cloudflare"
 
 [[kv_namespaces]]
 binding = "KV"
 id = "6e312692f2da41498477c592e5f2f3c1"
+
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "cf-challenge-ai-storycard-prod"
