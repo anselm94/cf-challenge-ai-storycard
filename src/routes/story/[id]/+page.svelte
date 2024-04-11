@@ -13,7 +13,7 @@
 	import Spinner from 'flowbite-svelte/Spinner.svelte';
 	import Textarea from 'flowbite-svelte/Textarea.svelte';
 	import type { PageData } from './$types';
-	import type { LangCode } from './+page.server';
+	import type { LangCode } from '$lib/types/types';
 
 	export let data: PageData;
 
@@ -38,7 +38,7 @@
 	let storyTitleText = data.data.text[selLanguage].title;
 	let storyContentText = data.data.text[selLanguage].content;
 	let selIllustrationStyle = data.data.illustration.selectedStyle;
-	let storyIllusUrl = data.data.illustration.styles[selIllustrationStyle].url;
+	let storyIllusUrl = data.data.illustration.styles[selIllustrationStyle]!.url;
 
 	$: storyLanguages = Object.keys(data.data.text);
 
@@ -47,8 +47,8 @@
 
 	async function selectLanguage(lang: string) {
 		selLanguage = lang as LangCode;
-		storyTitleText = data.data.text[selLanguage].title;
-		storyContentText = data.data.text[selLanguage].content;
+		storyTitleText = data.data.text[selLanguage]!.title;
+		storyContentText = data.data.text[selLanguage]!.content;
 	}
 
 	async function taskTranslateLanguage() {

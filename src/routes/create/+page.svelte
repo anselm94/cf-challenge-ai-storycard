@@ -52,12 +52,25 @@
 	let selectedTone = 'scary';
 	let selectedTheme = 'friendship';
 
-	let isCreatingStoryCard = false;
+	let isTaskInProgress = false;
 
-	async function createStoryCard() {
-		isCreatingStoryCard = true;
-		await new Promise((resolve) => setTimeout(resolve, 2000));
-		goto(`/story/123`);
+	async function taskCreateStoryCard() {
+		isTaskInProgress = true;
+		const res = await self.fetch('/create', {
+			method: 'POST',
+			body: JSON.stringify({
+				type: 'create-story',
+				genre: selectedGenre,
+				character: selectedCharacter,
+				location: selectedLocation,
+				tone: selectedTone,
+				theme: selectedTheme
+			})
+		});
+		const { storyId } = await res.json<{ storyId: string }>();
+		isTaskInProgress = false;
+
+		goto(`/story/${storyId}`);
 	}
 </script>
 
@@ -107,7 +120,7 @@
 				.
 			</div>
 			<div class="flex flex-row-reverse border-t bg-gray-100 px-4 py-4">
-				<Button type="submit" color="primary" on:click={createStoryCard}
+				<Button type="submit" color="primary" on:click={taskCreateStoryCard}
 					><MagicWandIcon class="me-2 h-4 w-4" />Create</Button
 				>
 			</div>
@@ -115,7 +128,7 @@
 	</div>
 </div>
 
-<Modal bind:open={isCreatingStoryCard} dismissable={false} size="xs">
+<Modal bind:open={isTaskInProgress} dismissable={false} size="xs">
 	<div class="flew-row flex items-center justify-center">
 		<Spinner />
 		<p class="ml-4">Creating Story Card ...</p>

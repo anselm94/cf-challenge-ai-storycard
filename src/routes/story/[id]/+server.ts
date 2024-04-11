@@ -1,5 +1,5 @@
+import type { LangCode, IllustrationStyle, StoryData } from '$lib/types/types';
 import { json } from '@sveltejs/kit';
-import type { IllustrationStyle, LangCode, StoryData } from './+page.server.js';
 
 type PostData = {
 	type: 'translate' | 'update-text' | 'update-illus-style';
@@ -52,7 +52,6 @@ async function updateText(
 			content: storyContent
 		};
 	}
-	console.log(storyTitle, storyContent);
 	await KV.put(key, JSON.stringify(storyData));
 }
 
@@ -70,7 +69,7 @@ async function updateIllustrationStyle(
 		// generate image and set url only if style is not available already
 		if (!Object.keys(storyData.illustration.styles).includes(illustrationStyle)) {
 			storyData.illustration.styles[illustrationStyle] = {
-				url: storyData.illustration.styles.none.url // TODO generate image
+				url: storyData.illustration.styles.none!.url // TODO generate image
 			};
 			await new Promise((resolve) => setTimeout(resolve, 5000));
 		}
@@ -85,8 +84,8 @@ async function translateStory(storyId: string, { language }: TranslatePostData, 
 
 	if (storyData) {
 		storyData.text[language as LangCode] = {
-			title: storyData.text['en'].title, // TODO translate
-			content: storyData.text['en'].content // TODO translate
+			title: storyData.text['en']!.title, // TODO translate
+			content: storyData.text['en']!.content // TODO translate
 		};
 		await new Promise((resolve) => setTimeout(resolve, 5000));
 	}
