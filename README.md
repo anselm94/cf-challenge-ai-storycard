@@ -2,6 +2,8 @@
 
 Create Stories in a card with illustrations using AI. Created as part of [Cloudflare AI Dev Challenge](https://dev.to/challenges/cloudflare).
 
+**Demo** - https://cf-challenge-ai-storycard.pages.dev
+
 ## Developing
 
 Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:

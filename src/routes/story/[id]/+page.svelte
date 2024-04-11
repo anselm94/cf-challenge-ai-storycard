@@ -11,8 +11,7 @@
 	import Select from 'flowbite-svelte/Select.svelte';
 	import Textarea from 'flowbite-svelte/Textarea.svelte';
 	import type { PageData } from './$types';
-
-	type LangCode = keyof PageData['data']['text'];
+	import type { LangCode } from './+page.server';
 
 	export let data: PageData;
 
@@ -76,11 +75,11 @@
 				</ButtonGroup>
 			</div>
 			<div class="flex flex-row justify-center">
-				<div class="inline-block touch-auto overflow-scroll px-4 py-36">
+				<div class="inline-block touch-auto overflow-scroll px-4 py-16">
 					<StoryCardPreview
 						bind:this={elStoryCardPreview}
-						bind:storyTitleText
-						bind:storyContentText
+						bind:storyTitleText={storyTitleText}
+						bind:storyContentText={storyContentText}
 						bind:storyIllusPath={storyIllusUrl}
 					/>
 				</div>

@@ -1678,7 +1678,7 @@ exit-hook@^2.2.1:
   resolved "https://registry.yarnpkg.com/exit-hook/-/exit-hook-2.2.1.tgz#007b2d92c6428eda2b76e7016a34351586934593"
   integrity sha512-eNTPlAD67BmP31LDINZ3U7HSF8l57TxOY2PmBJ1shpCvpnxBF93mWCE8YHBnXs8qiUZJc9WDcWIeC3a2HIAMfw==
 
-fabric@^6.0.0-beta20:
+fabric@6.0.0-beta20:
   version "6.0.0-beta20"
   resolved "https://registry.yarnpkg.com/fabric/-/fabric-6.0.0-beta20.tgz#b1aebbcbd11ddf98c82a1417288520d2cd8af92f"
   integrity sha512-YWL7KX7AFZuiBsXSnzFIvCpP9+FjbWzx02TiB31So25O9pe6O0o6Xa6LhI+5+HRl0eFUbws+F3MI4V5PXSz9dQ==
