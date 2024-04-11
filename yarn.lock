@@ -59,7 +59,7 @@
   resolved "https://registry.yarnpkg.com/@cloudflare/workerd-windows-64/-/workerd-windows-64-1.20240404.0.tgz#a57249cfe6b65fab8b6cb82b904868f36fb25efd"
   integrity sha512-DpCLvNkOeFinKGJwv9qbyT7RLZ1168dhPx85IHSqAYVWZIszNSmNOkEDqklvoJoab01AqETrrEhwBdmjCA7qfA==
 
-"@cloudflare/workers-types@^4.20231121.0":
+"@cloudflare/workers-types@^4.20231121.0", "@cloudflare/workers-types@^4.20240405.0":
   version "4.20240405.0"
   resolved "https://registry.yarnpkg.com/@cloudflare/workers-types/-/workers-types-4.20240405.0.tgz#6baab25dbae8d9c9be1454f82e29279215b5741f"
   integrity sha512-sEVOhyOgXUwfLkgHqbLZa/sfkSYrh7/zLmI6EZNibPaVPvAnAcItbNNl3SAlLyLKuwf8m4wAIAgu9meKWCvXjg==
@@ -1535,10 +1535,10 @@ exit-hook@^2.2.1:
   resolved "https://registry.yarnpkg.com/exit-hook/-/exit-hook-2.2.1.tgz#007b2d92c6428eda2b76e7016a34351586934593"
   integrity sha512-eNTPlAD67BmP31LDINZ3U7HSF8l57TxOY2PmBJ1shpCvpnxBF93mWCE8YHBnXs8qiUZJc9WDcWIeC3a2HIAMfw==
 
-fabric-pure-browser@^5.1.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/fabric-pure-browser/-/fabric-pure-browser-5.1.0.tgz#6e9b22309b6b61203835abc91a836ebbebf4d525"
-  integrity sha512-nVjXIxQoZJQzyj0Q5zi+sZO3KwBDcV11TrLVFC0JSOsx7TthzKObFwSeaxChyriMj6nCyA+vfvRg5J73u2Hg7A==
+fabric@5.3.0-browser:
+  version "5.3.0-browser"
+  resolved "https://registry.yarnpkg.com/fabric/-/fabric-5.3.0-browser.tgz#55c64a8ad0f39ef80f6589d2186f02c51c0b95a7"
+  integrity sha512-q8zJccGVX9SR+l223G1BG842/S6P6QdPeOfDClppG9uw2knkNMKwkpcrAWe186aLUZonu43V+jURhtSuix4OIQ==
 
 fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   version "3.1.3"
