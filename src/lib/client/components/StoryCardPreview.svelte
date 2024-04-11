@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { fabric } from 'fabric';
+	import * as fabric from 'fabric';
 	import FontFaceObserver from 'fontfaceobserver';
 	import ImgCardMask from '$lib/images/story-postcard-mask.png';
 
@@ -12,11 +12,8 @@
 	let fCanvas: fabric.Canvas | undefined;
 	let fTextboxStoryTitle: fabric.Textbox | undefined;
 	let fTextboxStoryContent: fabric.Textbox | undefined;
-	let fImageIllus: fabric.Image | undefined;
-	let fImageGrungeBorder: fabric.Image | undefined;
-
-	const fabricLoadImage = (url: string) =>
-		new Promise<fabric.Image>((resolve) => fabric.Image.fromURL(url, (img) => resolve(img)));
+	let fImageIllus: fabric.FabricImage | undefined;
+	let fImageGrungeBorder: fabric.FabricImage | undefined;
 
 	$: if (fTextboxStoryTitle) {
 		fTextboxStoryTitle.text = storyTitleText;
@@ -37,7 +34,7 @@
 		await new FontFaceObserver('Chewy').load();
 		await new FontFaceObserver('Poppins').load();
 
-		fImageGrungeBorder = await fabricLoadImage(ImgCardMask);
+		fImageGrungeBorder = await fabric.FabricImage.fromURL(ImgCardMask);
 		fImageGrungeBorder.left = 0;
 		fImageGrungeBorder.top = 0;
 		fImageGrungeBorder.selectable = false;
@@ -86,7 +83,7 @@
 			fCanvas?.remove(fImageIllus);
 		}
 
-		fImageIllus = await fabricLoadImage(storyIllusPath);
+		fImageIllus = await fabric.FabricImage.fromURL(storyIllusPath);
 		fImageIllus.left = 0;
 		fImageIllus.top = 0;
 		fImageIllus.scaleToHeight(480);
@@ -94,10 +91,10 @@
 
 		fCanvas?.add(fImageIllus);
 
-		fCanvas?.bringForward(fImageGrungeBorder!);
-		fCanvas?.bringToFront(fTextboxStoryTitle!);
-		fCanvas?.bringToFront(fTextboxStoryContent!);
-		fCanvas?.sendToBack(fImageIllus);
+		fCanvas?.bringObjectForward(fImageGrungeBorder!);
+		fCanvas?.bringObjectToFront(fTextboxStoryTitle!);
+		fCanvas?.bringObjectToFront(fTextboxStoryContent!);
+		fCanvas?.sendObjectToBack(fImageIllus);
 
 		fCanvas?.renderAll();
 	}
