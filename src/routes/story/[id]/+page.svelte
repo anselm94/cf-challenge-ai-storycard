@@ -115,11 +115,12 @@
 					</div>
 				</form>
 			</div>
-			<div class="mx-4 flex flex-col">
+			<div class="mx-4 flex mb-4 flex-col">
 				<div class="flex flex-row items-center py-4 text-lg font-medium">
 					<span class="me-1.5 font-bold">Edit</span> Text
 				</div>
-				<form action="">
+				<form method="post" action="?/update-text">
+					<input type="hidden" name="language" value={selLanguage} />
 					<div class="pb-4">
 						<Label for="story-title" class="mb-2 block">Title</Label>
 						<Input

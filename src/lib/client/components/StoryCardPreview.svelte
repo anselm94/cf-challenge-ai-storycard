@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { afterUpdate, onMount } from 'svelte';
+	import ImgCardMask from '$lib/images/story-postcard-mask.png';
 	import { FabricImage, StaticCanvas, Textbox } from 'fabric';
 	import FontFaceObserver from 'fontfaceobserver';
-	import ImgCardMask from '$lib/images/story-postcard-mask.png';
+	import { afterUpdate, onMount } from 'svelte';
 
 	export let storyTitleText: string;
 	export let storyContentText: string;
@@ -10,24 +10,33 @@
 
 	let elCanvas: HTMLCanvasElement;
 	let fCanvas: StaticCanvas | undefined;
-	let fTextboxStoryTitle: Textbox | undefined;
-	let fTextboxStoryContent: Textbox | undefined;
-	let fImageIllus: FabricImage | undefined;
-	let fImageGrungeBorder: FabricImage | undefined;
 
 	onMount(async () => {
 		fCanvas = new StaticCanvas(elCanvas, {
 			enableRetinaScaling: true
 		});
+	});
+
+	afterUpdate(() => {
+		renderCanvas();
+	});
+
+	async function renderCanvas() {
+		fCanvas?.clear();
 
 		await new FontFaceObserver('Chewy').load();
 		await new FontFaceObserver('Poppins').load();
 
-		fImageGrungeBorder = await FabricImage.fromURL(ImgCardMask);
-		fImageGrungeBorder.left = 0;
-		fImageGrungeBorder.top = 0;
+		let fImageGrungeBorder = await FabricImage.fromURL(
+			ImgCardMask,
+			{},
+			{
+				left: 0,
+				top: 0
+			}
+		);
 
-		fTextboxStoryTitle = new Textbox(storyTitleText, {
+		let fTextboxStoryTitle = new Textbox(storyTitleText, {
 			left: 360,
 			top: 24,
 			width: 360,
@@ -38,7 +47,7 @@
 			editable: false
 		});
 
-		fTextboxStoryContent = new Textbox(storyContentText, {
+		let fTextboxStoryContent = new Textbox(storyContentText, {
 			left: 380,
 			top: 70,
 			width: 320,
@@ -53,38 +62,20 @@
 		});
 		// fTextboxStoryContent.centerV()
 
-		fCanvas?.add(fTextboxStoryTitle);
-		fCanvas?.add(fTextboxStoryContent);
-	});
-
-	afterUpdate(() => {
-		fTextboxStoryTitle?.set({ text: storyTitleText });
-		fTextboxStoryContent?.set({ text: storyContentText });
-		renderIllustration();
-	});
-
-	async function renderIllustration() {
-		if (!storyIllusPath) {
-			return;
-		}
-
-		if (fImageIllus) {
-			fCanvas?.remove(fImageIllus);
-		}
-
-		fImageIllus = await FabricImage.fromURL(storyIllusPath);
-		fImageIllus.left = 0;
-		fImageIllus.top = 0;
+		let fImageIllus = await FabricImage.fromURL(
+			storyIllusPath,
+			{},
+			{
+				left: 0,
+				top: 0
+			}
+		);
 		fImageIllus.scaleToHeight(480);
 
 		fCanvas?.add(fImageIllus);
-
-		fCanvas?.bringObjectForward(fImageGrungeBorder!);
-		fCanvas?.bringObjectToFront(fTextboxStoryTitle!);
-		fCanvas?.bringObjectToFront(fTextboxStoryContent!);
-		fCanvas?.sendObjectToBack(fImageIllus);
-
-		fCanvas?.renderAll();
+		fCanvas?.add(fImageGrungeBorder);
+		fCanvas?.add(fTextboxStoryTitle);
+		fCanvas?.add(fTextboxStoryContent);
 	}
 
 	export function downloadImage() {
