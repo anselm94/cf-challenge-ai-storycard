@@ -56,7 +56,7 @@
 
 		fTextboxStoryContent = new fabric.Textbox(storyContentText, {
 			left: 380,
-			top: 65,
+			top: 70,
 			width: 320,
 			height: 420,
 			fontSize: 15,

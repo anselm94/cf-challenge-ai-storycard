@@ -1,6 +1,5 @@
 <script lang="ts">
 	import StoryCardPreview from '$lib/client/components/StoryCardPreview.svelte';
-	import ImgIllus from '$lib/images/storybook-illus.png';
 	import DownloadIcon from 'flowbite-svelte-icons/DownloadSolid.svelte';
 	import TranslateIcon from 'flowbite-svelte-icons/TextSizeOutline.svelte';
 	import SettingsIcon from 'flowbite-svelte-icons/UserSettingsSolid.svelte';
@@ -11,35 +10,39 @@
 	import Modal from 'flowbite-svelte/Modal.svelte';
 	import Select from 'flowbite-svelte/Select.svelte';
 	import Textarea from 'flowbite-svelte/Textarea.svelte';
+	import type { PageData } from './$types';
+
+	type LangCode = keyof PageData['data']['text'];
+
+	export let data: PageData;
 
 	let LANGUAGES = [
 		{ value: 'en', name: 'English' },
 		{ value: 'de', name: 'German' },
-		{ value: 'es', name: 'Spanish' }
+		{ value: 'es', name: 'Spanish' },
 	];
 
 	let ILLUSTRATION_STYLES = [
-		{ value: 'none', name: 'None', bg: ImgIllus },
+		{ value: 'none', name: 'None', bg: 'https://i.pravatar.cc/100' },
 		{ value: 'artistic', name: 'Artistic', bg: 'https://i.pravatar.cc/100' },
 		{ value: 'comic', name: 'Comic', bg: 'https://i.pravatar.cc/100' }
 	];
 
 	let elStoryCardPreview: StoryCardPreview | undefined;
 
-	export let storyTitleText: string = `The Girl and the Magic Aquarium`;
-	export let storyContentText: string = `Once upon a time, in a quaint little seaside town, lived a curious girl named Mia. One sunny afternoon, she visited the local aquarium for the very first time. As she approached the vast tank filled with colorful fish, her eyes widened in awe. The rainbow-hued angelfish danced gracefully, while the playful clownfish hid among the coral. Mia was mesmerized by the gentle sway of the sea anemone and the graceful glide of the stingrays. She spent hours watching the underwater ballet, her heart filled with wonder and delight. The magic of the aquarium had cast its spell on Mia, igniting a lifelong love for the ocean and its wondrous inhabitants.`;
-	export let storyIllusPath: string = ImgIllus;
+	let selLanguage: LangCode = 'en';
 
-	let translatedLanguages = [
-		{ value: 'en', name: 'English' },
-		{ value: 'de', name: 'German' }
-	];
-	let currentLanguage = 'en';
+	$: storyTitleText = data.data.text[selLanguage].title;
+	$: storyContentText = data.data.text[selLanguage].content;
+	$: selIllustrationStyle = data.data.illustration.selectedStyle;
+	$: storyIllusUrl = data.data.illustration.styles[selIllustrationStyle].url;
+
+	let translatedLanguages = Object.keys(data.data.text);
 
 	let isTranslateModalOpen = false;
 
 	async function translateToLanguage(lang: string) {
-		currentLanguage = lang;
+		selLanguage = lang as LangCode;
 	}
 </script>
 
@@ -61,8 +64,9 @@
 				<ButtonGroup>
 					{#each translatedLanguages as lang}
 						<Button
-							color={lang.value === currentLanguage ? 'primary' : 'light'}
-							on:click={() => translateToLanguage(lang.value)}>{lang.name}</Button
+							color={lang === selLanguage ? 'primary' : 'light'}
+							on:click={() => translateToLanguage(lang)}
+							>{LANGUAGES.filter((l) => l.value === lang)[0].name}</Button
 						>
 					{/each}
 					<Button color="light" class="bg-gray-200" on:click={() => (isTranslateModalOpen = true)}>
@@ -77,7 +81,7 @@
 						bind:this={elStoryCardPreview}
 						bind:storyTitleText
 						bind:storyContentText
-						bind:storyIllusPath
+						bind:storyIllusPath={storyIllusUrl}
 					/>
 				</div>
 			</div>
@@ -103,11 +107,11 @@
 								name="style"
 								value={style.value}
 								style="background-image: url('{style.bg}');"
-								checked={style.value === 'none'}
+								checked={style.value === selIllustrationStyle}
 							/>
 						{/each}
 					</div>
-					<div class="flex flex-row-reverse items-center px-2 py-2">
+					<div class="flex flex-row-reverse items-center px-2 pb-4 pt-2">
 						<Button outline color="alternative" size="xs" type="submit">Apply</Button>
 					</div>
 				</form>
@@ -116,24 +120,31 @@
 				<div class="flex flex-row items-center py-4 text-lg font-medium">
 					<span class="me-1.5 font-bold">Edit</span> Text
 				</div>
-				<div class="pb-4">
-					<Label for="story-title" class="mb-2 block">Title</Label>
-					<Input
-						id="story-title"
-						placeholder="Story Title"
-						type="text"
-						bind:value={storyTitleText}
-					/>
-				</div>
-				<div class="py-4">
-					<Label for="story-content" class="mb-2 block">Content</Label>
-					<Textarea
-						id="story-content"
-						placeholder="Story Content"
-						class="h-56 lg:h-36 xl:h-80"
-						bind:value={storyContentText}
-					/>
-				</div>
+				<form action="">
+					<div class="pb-4">
+						<Label for="story-title" class="mb-2 block">Title</Label>
+						<Input
+							id="story-title"
+							name="story-title"
+							placeholder="Story Title"
+							type="text"
+							value={storyTitleText}
+						/>
+					</div>
+					<div class="py-4">
+						<Label for="story-content" class="mb-2 block">Content</Label>
+						<Textarea
+							id="story-content"
+							name="story-content"
+							placeholder="Story Content"
+							class="h-56 lg:h-36 xl:h-80"
+							value={storyContentText}
+						/>
+					</div>
+					<div class="flex flex-row-reverse items-center px-2">
+						<Button outline color="alternative" size="xs" type="submit">Save</Button>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
@@ -145,7 +156,7 @@
 			<Select
 				name="language"
 				class="mt-2"
-				items={LANGUAGES.filter((item) => translatedLanguages.some((i) => i.value !== item.value))}
+				items={LANGUAGES.filter((item) => !translatedLanguages.includes(item.value))}
 			/>
 		</Label>
 		<svelte:fragment slot="footer">
