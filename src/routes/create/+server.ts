@@ -37,12 +37,12 @@ async function createStory(
 ) {
 	const storyId = randomUUID();
 
-	const { title, content, illustration } = await generateStory(
+	const { title, content, imagePrompt, illustration } = await generateStory(
 		{ genre, character, location, tone, theme, extraPrompt: '' },
 		new Ai(AI)
 	);
 
-	const objectKey = `img-${storyId}`;
+	const objectKey = `img-${storyId}-none`;
 	await R2.put(objectKey, illustration, {
 		httpMetadata: {
 			contentType: 'image/png'
@@ -59,6 +59,7 @@ async function createStory(
 		},
 		illustration: {
 			selectedStyle: 'none',
+			imagePrompt: imagePrompt,
 			styles: {
 				none: {
 					url: `https://pub-edb1f3e64c864cb685897db171870652.r2.dev/${objectKey}`

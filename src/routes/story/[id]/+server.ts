@@ -1,4 +1,4 @@
-import { translateLanguageStory } from '$lib/server/ai';
+import { generateImage, translateLanguageStory } from '$lib/server/ai';
 import type { LangCode, IllustrationStyle, StoryData } from '$lib/types/types';
 import { Ai } from '@cloudflare/ai';
 import { json } from '@sveltejs/kit';
@@ -36,9 +36,16 @@ export const POST = async ({ params, request, platform }) => {
 		case 'update-text':
 			await updateText(params.id, data as UpdateTextPostData, platform!.env.KV);
 			break;
-		case 'update-illus-style':
-			await updateIllustrationStyle(params.id, data as UpdateIllusStylePostData, platform!.env.KV);
-			break;
+		case 'update-illus-style': {
+			const res = await updateIllustrationStyle(
+				params.id,
+				data as UpdateIllusStylePostData,
+				platform!.env.KV,
+				platform!.env.R2,
+				platform!.env.AI
+			);
+			return json(res);
+		}
 		default:
 			break;
 	}
@@ -65,7 +72,9 @@ async function updateText(
 async function updateIllustrationStyle(
 	storyId: string,
 	{ illustrationStyle }: UpdateIllusStylePostData,
-	KV: KVNamespace
+	KV: KVNamespace,
+	R2: R2Bucket,
+	AI: unknown
 ) {
 	const key = `story#${storyId}`;
 	const storyData = await KV.get<StoryData>(key, 'json');
@@ -75,13 +84,25 @@ async function updateIllustrationStyle(
 
 		// generate image and set url only if style is not available already
 		if (!Object.keys(storyData.illustration.styles).includes(illustrationStyle)) {
+			const { illustration } = await generateImage(
+				{ authorStyle: illustrationStyle, illusImgPrompt: storyData.illustration.imagePrompt },
+				new Ai(AI)
+			);
+			const objectKey = `img-${storyId}-${illustrationStyle.toLocaleLowerCase().replace(' ', '-')}`;
+			await R2.put(objectKey, illustration, {
+				httpMetadata: {
+					contentType: 'image/png'
+				}
+			});
 			storyData.illustration.styles[illustrationStyle] = {
-				url: storyData.illustration.styles.none!.url // TODO generate image
+				url: `https://pub-edb1f3e64c864cb685897db171870652.r2.dev/${objectKey}`
 			};
-			await new Promise((resolve) => setTimeout(resolve, 5000));
+			await KV.put(key, JSON.stringify(storyData));
 		}
+		return {
+			illustrationUrl: storyData.illustration.styles[illustrationStyle]!.url
+		};
 	}
-	await KV.put(key, JSON.stringify(storyData));
 }
 
 async function translateStory(

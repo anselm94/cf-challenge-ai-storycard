@@ -49,7 +49,7 @@
 
 		let fTextboxStoryContent = new Textbox(storyContentText, {
 			left: 380,
-			top: 70,
+			top: 65,
 			width: 320,
 			height: 420,
 			fontSize: 15,

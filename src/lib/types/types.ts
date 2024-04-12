@@ -1,5 +1,13 @@
-export type LangCode = 'en' | 'de' | 'es';
-export type IllustrationStyle = 'none' | 'artistic' | 'comic';
+export type LangCode = 'en' | 'fr' | 'de' | 'es' | 'pt' | 'it' | 'af' | 'ms' | 'id';
+export type IllustrationStyle =
+	| 'none'
+	| 'Corry Loftis'
+	| 'Jerry Pinkney'
+	| 'Jim Toomey'
+	| 'Lois Von Baarle'
+	| 'Martin Rowson'
+	| 'Posy Simmonds'
+	| 'Tatsuro Kiuchi';
 export type StoryData = {
 	id: string;
 	text: Record<
@@ -19,6 +27,7 @@ export type StoryData = {
 			>
 		>;
 	illustration: {
+		imagePrompt: string;
 		selectedStyle: IllustrationStyle;
 		styles: Record<'none', { url: string }> & Partial<Record<IllustrationStyle, { url: string }>>;
 	};

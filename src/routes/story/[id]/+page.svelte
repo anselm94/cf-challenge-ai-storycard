@@ -1,9 +1,19 @@
 <script lang="ts">
-	import { invalidateAll } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 	import StoryCardPreview from '$lib/client/components/StoryCardPreview.svelte';
+	import ImgStyle1 from '$lib/images/styles/style-corryloftis.jpg';
+	import ImgStyle2 from '$lib/images/styles/style-jerrypinkney.jpg';
+	import ImgStyle3 from '$lib/images/styles/style-jimtoomey.jpg';
+	import ImgStyle4 from '$lib/images/styles/style-loisvonbaarle.jpg';
+	import ImgStyle5 from '$lib/images/styles/style-martinrowson.jpg';
+	import ImgNoneStyle from '$lib/images/styles/style-none.jpg';
+	import ImgStyle6 from '$lib/images/styles/style-posysimmonds.jpg';
+	import ImgStyle7 from '$lib/images/styles/style-tatsurokiuchi.jpg';
+	import type { LangCode } from '$lib/types/types';
 	import DownloadIcon from 'flowbite-svelte-icons/DownloadSolid.svelte';
 	import TranslateIcon from 'flowbite-svelte-icons/TextSizeOutline.svelte';
 	import SettingsIcon from 'flowbite-svelte-icons/UserSettingsSolid.svelte';
+	import Banner from 'flowbite-svelte/Banner.svelte';
 	import Button from 'flowbite-svelte/Button.svelte';
 	import ButtonGroup from 'flowbite-svelte/ButtonGroup.svelte';
 	import Input from 'flowbite-svelte/Input.svelte';
@@ -13,21 +23,30 @@
 	import Spinner from 'flowbite-svelte/Spinner.svelte';
 	import Textarea from 'flowbite-svelte/Textarea.svelte';
 	import type { PageData } from './$types';
-	import type { LangCode } from '$lib/types/types';
 
 	export let data: PageData;
 
 	let LANGUAGES = [
 		{ value: 'en', name: 'English' },
+		{ value: 'fr', name: 'French' },
 		{ value: 'de', name: 'German' },
 		{ value: 'es', name: 'Spanish' },
-		{ value: 'pt', name: 'Portuguese' }
+		{ value: 'pt', name: 'Portuguese' },
+		{ value: 'it', name: 'Italian' },
+		{ value: 'af', name: 'Afrikaans' },
+		{ value: 'ms', name: 'Malay' },
+		{ value: 'id', name: 'Indonesian' }
 	];
 
 	let ILLUSTRATION_STYLES = [
-		{ value: 'none', name: 'None', bg: 'https://i.pravatar.cc/100' },
-		{ value: 'artistic', name: 'Artistic', bg: 'https://i.pravatar.cc/100' },
-		{ value: 'comic', name: 'Comic', bg: 'https://i.pravatar.cc/100' }
+		{ value: 'none', name: 'None', bg: ImgNoneStyle },
+		{ value: 'Corry Loftis', name: 'Artistic', bg: ImgStyle1 },
+		{ value: 'Jerry Pinkney', name: 'Comic', bg: ImgStyle2 },
+		{ value: 'Jim Toomey', name: 'Comic', bg: ImgStyle3 },
+		{ value: 'Lois Von Baarle', name: 'Comic', bg: ImgStyle4 },
+		{ value: 'Martin Rowson', name: 'Comic', bg: ImgStyle5 },
+		{ value: 'Posy Simmonds', name: 'Comic', bg: ImgStyle6 },
+		{ value: 'Tatsuro Kiuchi', name: 'Comic', bg: ImgStyle7 }
 	];
 
 	let elStoryCardPreview: StoryCardPreview | undefined;
@@ -78,7 +97,7 @@
 
 	async function taskUpdateIllusStyle() {
 		isTaskInProgress = true;
-		await self.fetch(`/story/${data.data.id}`, {
+		const res = await self.fetch(`/story/${data.data.id}`, {
 			method: 'POST',
 			body: JSON.stringify({
 				type: 'update-illus-style',
@@ -86,6 +105,10 @@
 			})
 		});
 		isTaskInProgress = false;
+
+		const { illustrationUrl }: { illustrationUrl: string } = await res.json();
+		storyIllusUrl = illustrationUrl;
+
 		return invalidateAll();
 	}
 </script>
@@ -123,9 +146,9 @@
 				<div class="inline-block touch-auto overflow-scroll px-4 py-16">
 					<StoryCardPreview
 						bind:this={elStoryCardPreview}
-						bind:storyTitleText
-						bind:storyContentText
-						bind:storyIllusPath={storyIllusUrl}
+						{storyTitleText}
+						{storyContentText}
+						storyIllusPath={storyIllusUrl}
 					/>
 				</div>
 			</div>
@@ -195,6 +218,14 @@
 		</div>
 	</div>
 </div>
+
+<Banner position="absolute" bannerType="info" dismissable>
+	<p class="flex items-center text-sm font-normal text-gray-500 dark:text-gray-400">
+		<span class="me-2 font-bold">Do you know?</span> You can access this link upto 24 hours! Collaborate
+		with your friends, download and share your story card!
+	</p>
+</Banner>
+
 <Modal title="Translate Story Card" bind:open={isTranslateModalOpen} autoclose>
 	<Label>
 		Select Language
