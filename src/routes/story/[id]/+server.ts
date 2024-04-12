@@ -66,7 +66,7 @@ async function updateText(
 			content: storyContent
 		};
 	}
-	await KV.put(key, JSON.stringify(storyData));
+	await KV.put(key, JSON.stringify(storyData), { expirationTtl: 60 * 60 * 24 });
 }
 
 async function updateIllustrationStyle(
@@ -97,7 +97,7 @@ async function updateIllustrationStyle(
 			storyData.illustration.styles[illustrationStyle] = {
 				url: `https://pub-edb1f3e64c864cb685897db171870652.r2.dev/${objectKey}`
 			};
-			await KV.put(key, JSON.stringify(storyData));
+			await KV.put(key, JSON.stringify(storyData), { expirationTtl: 60 * 60 * 24 });
 		}
 		return {
 			illustrationUrl: storyData.illustration.styles[illustrationStyle]!.url
@@ -130,5 +130,5 @@ async function translateStory(
 		};
 	}
 
-	await KV.put(key, JSON.stringify(storyData));
+	await KV.put(key, JSON.stringify(storyData), { expirationTtl: 60 * 60 * 24 });
 }

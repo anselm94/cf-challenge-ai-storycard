@@ -52,7 +52,7 @@
 			top: 65,
 			width: 320,
 			height: 420,
-			fontSize: 15,
+			fontSize: 15 * (650 / storyContentText.length), // to fit in variable text size
 			isWrapping: true,
 			editable: false,
 			fontFamily: 'Poppins',
