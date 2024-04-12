@@ -35,6 +35,10 @@ npm run dev
 npm run dev -- --open
 ```
 
+> **Note**
+>
+> The `AI` binding in Wrangler currently doesn't work while working locally
+
 ## Deploy
 
 ### Prerequisites
@@ -44,6 +48,7 @@ npm run dev -- --open
 3. Create a KV namespace
 4. Create an R2 bucket
 5. Update the [`wrangler.toml`](./wrangler.toml) file with right KV `id` and R2 `bucket_name`
+6. Finally, login Wrangler into Cloudflare account by `npx wrangler login`
 
 ### Steps
 
