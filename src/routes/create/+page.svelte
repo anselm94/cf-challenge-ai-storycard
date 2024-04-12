@@ -21,7 +21,7 @@
 		{ value: 'superhero', name: 'Superhero' },
 		{ value: 'steampunk', name: 'Steampunk' },
 		{ value: 'mythology', name: 'Mythology' },
-		{ value: 'folklore', name: 'Folklore' },
+		{ value: 'folklore', name: 'Folklore' }
 	];
 	let CHARACTERS = [
 		{ value: 'dragon', name: 'Dragon' },
@@ -41,7 +41,7 @@
 		{ value: 'goblin', name: 'Goblin' },
 		{ value: 'giant', name: 'Giant' },
 		{ value: 'dwarf', name: 'Dwarf' },
-		{ value: 'elf', name: 'Elf' },
+		{ value: 'elf', name: 'Elf' }
 	];
 	let LOCATIONS = [
 		{ value: 'forest', name: 'Forest' },
@@ -56,7 +56,7 @@
 		{ value: 'garden', name: 'Garden' },
 		{ value: 'ship', name: 'Ship' },
 		{ value: 'candy land', name: 'Candy land' },
-		{ value: 'factory', name: 'Factory' },
+		{ value: 'factory', name: 'Factory' }
 	];
 	let TONES = [
 		{ value: 'happy', name: 'Happy' },
@@ -70,7 +70,7 @@
 		{ value: 'historical', name: 'Historical' },
 		{ value: 'mythological', name: 'Mythological' },
 		{ value: 'inspiring', name: 'Inspiring' },
-		{ value: 'whimsical', name: 'Whimsical' },
+		{ value: 'whimsical', name: 'Whimsical' }
 	];
 	let THEMES = [
 		{ value: 'friendship', name: 'Friendship' },
@@ -88,15 +88,16 @@
 		{ value: 'perseverance', name: 'Perseverance' },
 		{ value: 'curiosity', name: 'Curiosity' },
 		{ value: 'responsibility', name: 'Responsibility' },
-		{ value: 'team work', name: 'Team work' },
+		{ value: 'team work', name: 'Team work' }
 	];
 
-	let selectedGenre = 'comedy';
-	let selectedCharacter = 'dragon';
-	let selectedLocation = 'forest';
-	let selectedTone = 'scary';
-	let selectedTheme = 'friendship';
+	let selectedGenre = '';
+	let selectedCharacter = '';
+	let selectedLocation = '';
+	let selectedTone = '';
+	let selectedTheme = '';
 	let extraPrompt = '';
+	juggleCreateParams(); // to create intereting stories ;)
 
 	let isTaskInProgress = false;
 
@@ -119,7 +120,7 @@
 		goto(`/story/${storyId}`);
 	}
 
-	async function juggleCreateParams() {
+	function juggleCreateParams() {
 		selectedGenre = GENRES[Math.floor(Math.random() * GENRES.length)].value;
 		selectedCharacter = CHARACTERS[Math.floor(Math.random() * CHARACTERS.length)].value;
 		selectedLocation = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)].value;
@@ -139,8 +140,12 @@
 		<form class="flow flow-row block text-lg">
 			<div class="flex flex-row items-center justify-between border-b bg-gray-100 px-4 py-4">
 				<h2 class="inline-block text-xl font-bold">Define a Narrative</h2>
-				<Button outline color="alternative" size="xs" class="mx-4 animate-bounce hover:animate-none" on:click={juggleCreateParams}
-					><HeadExplodeIcon class="me-2 h-4 w-4" />Surprise Me</Button
+				<Button
+					outline
+					color="alternative"
+					size="xs"
+					class="mx-4 animate-bounce hover:animate-none"
+					on:click={juggleCreateParams}><HeadExplodeIcon class="me-2 h-4 w-4" />Surprise Me</Button
 				>
 			</div>
 			<div class="px-8 pb-12 pt-4 text-base font-normal leading-[5rem]">

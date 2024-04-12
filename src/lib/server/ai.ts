@@ -1,5 +1,6 @@
 import type { LangCode, StoryPromptInput } from '$lib/types/types';
 import { Ai } from '@cloudflare/ai';
+import { readableStreamToArrayBuffer } from './utils';
 
 const ILLUSTRATION_AUTHORS = [
 	'Corry Loftis',
@@ -29,7 +30,7 @@ export async function generateStory(
 		messages: [
 			{
 				role: 'system',
-				content: `You are the greatest storyteller of all time, loved by millions of young children and your ability to weave tales knows no bounds. Your stories, whether rooted in truth or blossoming from the seeds of imagination, are consistently enthralling and captivating. Your task is to write a short ${genre} story of about 100 words, about a ${character} who lives in a ${location}. The story should have a ${tone} tone and revolve around the theme of ${theme}. Also, consider any inputs from the user. You must write the title and story following the below format\n\n## Format:\n<title>\n---\n<story>`
+				content: `You are the greatest storyteller of all time, loved by millions of young children and your ability to weave tales knows no bounds. Your stories, whether rooted in truth or blossoming from the seeds of imagination, are consistently enthralling and captivating. Your task is to write a short ${genre} story of less than 100 words in a paragraph, about a character - ${character} who lives in a ${location}. The story should have a ${tone} tone and revolve around the theme of ${theme}. You must write the title and story following the below format\n\n## Format:\n<title>\n---\n<story>`
 			},
 			{
 				role: 'user',
@@ -41,6 +42,7 @@ export async function generateStory(
 	let [storyTitle, storyContent] = outStory.response.split('---');
 	storyTitle = storyTitle.replace('title', '').replace('Title', '').replace(':', '').trim();
 	storyContent = storyContent.replace('story', '').replace('Story', '').trim();
+	console.log(`Generated a story with title - ${storyTitle}`);
 
 	// Illustration prompt generation
 	const randomIllusAuthor =
@@ -58,17 +60,21 @@ export async function generateStory(
 		]
 	})) as { response: string };
 	const illusImgPrompt = outIllusCaption.response.replace('"', '').trim();
+	console.log(`Generated an illustration prompt - ${illusImgPrompt} for story - ${storyTitle}`);
 
 	// Illustration generation
-	const outIllus = await ai.run('@cf/bytedance/stable-diffusion-xl-lightning', {
-		prompt: illusImgPrompt,
-		num_steps: 4
-	});
+	const outIllus = (await ai.run('@cf/bytedance/stable-diffusion-xl-lightning', {
+		prompt: illusImgPrompt
+	})) as unknown as ReadableStream<Uint8Array>;
+
+	// needed to buffer the stream, since R2 storage needs size of the stream before hand
+	const outIllusBuffer = await readableStreamToArrayBuffer(outIllus);
+	console.log(`Generated an illustration of size - ${outIllus} bytes for story - ${storyTitle}`);
 
 	return {
 		title: storyTitle,
 		content: storyContent,
-		illustration: outIllus
+		illustration: outIllusBuffer
 	};
 }
 
