@@ -12,7 +12,16 @@
 	let GENRES = [
 		{ value: 'comedy', name: 'Comedy' },
 		{ value: 'fantasy', name: 'Fantasy' },
-		{ value: 'science fiction', name: 'Science Fiction' }
+		{ value: 'science fiction', name: 'Science Fiction' },
+		{ value: 'fairy tale', name: 'Fairy Tale' },
+		{ value: 'historical fantasy', name: 'Historical Fantasy' },
+		{ value: 'mystery', name: 'Mystery' },
+		{ value: 'adventure', name: 'Adventure' },
+		{ value: 'romance', name: 'Romance' },
+		{ value: 'superhero', name: 'Superhero' },
+		{ value: 'steampunk', name: 'Steampunk' },
+		{ value: 'mythology', name: 'Mythology' },
+		{ value: 'folklore', name: 'Folklore' },
 	];
 	let CHARACTERS = [
 		{ value: 'dragon', name: 'Dragon' },
@@ -22,7 +31,17 @@
 		{ value: 'alien', name: 'Alien' },
 		{ value: 'superhero', name: 'Superhero' },
 		{ value: 'prince', name: 'Prince' },
-		{ value: 'princess', name: 'Princess' }
+		{ value: 'princess', name: 'Princess' },
+		{ value: 'knight', name: 'Knight' },
+		{ value: 'fairy', name: 'Fairy' },
+		{ value: 'wizard', name: 'Wizard' },
+		{ value: 'phoenix', name: 'Phoenix' },
+		{ value: 'mermaid', name: 'Mermaid' },
+		{ value: 'merman', name: 'Merman' },
+		{ value: 'goblin', name: 'Goblin' },
+		{ value: 'giant', name: 'Giant' },
+		{ value: 'dwarf', name: 'Dwarf' },
+		{ value: 'elf', name: 'Elf' },
 	];
 	let LOCATIONS = [
 		{ value: 'forest', name: 'Forest' },
@@ -30,21 +49,46 @@
 		{ value: 'underwater', name: 'Underwater' },
 		{ value: 'city', name: 'City' },
 		{ value: 'castle', name: 'Castle' },
-		{ value: 'school', name: 'School' }
+		{ value: 'school', name: 'School' },
+		{ value: 'countryside', name: 'Countryside' },
+		{ value: 'beach', name: 'Beach' },
+		{ value: 'jungle', name: 'Jungle' },
+		{ value: 'garden', name: 'Garden' },
+		{ value: 'ship', name: 'Ship' },
+		{ value: 'candy land', name: 'Candy land' },
+		{ value: 'factory', name: 'Factory' },
 	];
 	let TONES = [
+		{ value: 'happy', name: 'Happy' },
 		{ value: 'scary', name: 'Scary' },
 		{ value: 'funny', name: 'Funny' },
 		{ value: 'adventurous', name: 'Adventurous' },
 		{ value: 'mysterious', name: 'Mysterious' },
-		{ value: 'magical', name: 'Magical' }
+		{ value: 'magical', name: 'Magical' },
+		{ value: 'wonderous', name: 'Wonderous' },
+		{ value: 'heartwarming', name: 'Heartwarming' },
+		{ value: 'historical', name: 'Historical' },
+		{ value: 'mythological', name: 'Mythological' },
+		{ value: 'inspiring', name: 'Inspiring' },
+		{ value: 'whimsical', name: 'Whimsical' },
 	];
 	let THEMES = [
 		{ value: 'friendship', name: 'Friendship' },
 		{ value: 'bravery', name: 'Bravery' },
 		{ value: 'adventure', name: 'Adventure' },
+		{ value: 'family', name: 'Family' },
 		{ value: 'love', name: 'Love' },
-		{ value: 'deception', name: 'Deception' }
+		{ value: 'imagination', name: 'Imagination' },
+		{ value: 'honesty', name: 'Honesty' },
+		{ value: 'compassion', name: 'Compassion' },
+		{ value: 'self discovery', name: 'Self discovery' },
+		{ value: 'nature', name: 'Nature' },
+		{ value: 'creativity', name: 'Creativity' },
+		{ value: 'kindness', name: 'Kindness' },
+		{ value: 'perseverance', name: 'Perseverance' },
+		{ value: 'curiosity', name: 'Curiosity' },
+		{ value: 'responsibility', name: 'Responsibility' },
+		{ value: 'team work', name: 'Team work' },
 	];
 
 	let selectedGenre = 'comedy';
@@ -52,7 +96,7 @@
 	let selectedLocation = 'forest';
 	let selectedTone = 'scary';
 	let selectedTheme = 'friendship';
-	let extraPrompt = ''
+	let extraPrompt = '';
 
 	let isTaskInProgress = false;
 
@@ -74,6 +118,14 @@
 
 		goto(`/story/${storyId}`);
 	}
+
+	async function juggleCreateParams() {
+		selectedGenre = GENRES[Math.floor(Math.random() * GENRES.length)].value;
+		selectedCharacter = CHARACTERS[Math.floor(Math.random() * CHARACTERS.length)].value;
+		selectedLocation = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)].value;
+		selectedTone = TONES[Math.floor(Math.random() * TONES.length)].value;
+		selectedTheme = THEMES[Math.floor(Math.random() * THEMES.length)].value;
+	}
 </script>
 
 <svelte:head>
@@ -87,7 +139,7 @@
 		<form class="flow flow-row block text-lg">
 			<div class="flex flex-row items-center justify-between border-b bg-gray-100 px-4 py-4">
 				<h2 class="inline-block text-xl font-bold">Define a Narrative</h2>
-				<Button outline color="alternative" size="xs" class="mx-4"
+				<Button outline color="alternative" size="xs" class="mx-4 animate-bounce hover:animate-none" on:click={juggleCreateParams}
 					><HeadExplodeIcon class="me-2 h-4 w-4" />Surprise Me</Button
 				>
 			</div>
@@ -122,7 +174,11 @@
 				.
 				<Label defaultClass="inline-block">
 					<span class="hidden">Extra Prompt input</span>
-					<Input defaultClass="block w-96" placeholder="(Optional) Write further story narration" bind:value={extraPrompt} />
+					<Input
+						defaultClass="block w-96"
+						placeholder="(Optional) Write further story narration"
+						bind:value={extraPrompt}
+					/>
 				</Label>
 			</div>
 			<div class="flex flex-row-reverse border-t bg-gray-100 px-4 py-4">
