@@ -59,7 +59,7 @@ export async function generateStory(
 	})) as { response: string };
 	const illusImgPrompt = outIllusCaption.response.replace('"', '').trim();
 
-    // Illustration generation
+	// Illustration generation
 	const outIllus = await ai.run('@cf/bytedance/stable-diffusion-xl-lightning', {
 		prompt: illusImgPrompt,
 		num_steps: 4
@@ -80,14 +80,19 @@ export async function translateLanguageStory(
 	}: { storyTitle: string; storyContent: string; target_lang: LangCode },
 	ai: Ai
 ) {
-	const outTranslated = await ai.run('@cf/meta/m2m100-1.2b', {
+	// create two translation request, instead of one, as it's unreliable
+	const outTranslatedTitle = await ai.run('@cf/meta/m2m100-1.2b', {
 		source_lang: 'en',
 		target_lang: target_lang,
-		text: `${storyTitle}\n---\n${storyContent}`
+		text: `${storyTitle}`
 	});
-	[storyTitle, storyContent] = (outTranslated.translated_text ?? '---').split('---');
+	const outTranslatedContent = await ai.run('@cf/meta/m2m100-1.2b', {
+		source_lang: 'en',
+		target_lang: target_lang,
+		text: `${storyContent}`
+	});
 	return {
-		title: storyTitle,
-		content: storyContent
+		title: outTranslatedTitle.translated_text,
+		content: outTranslatedContent.translated_text
 	};
 }

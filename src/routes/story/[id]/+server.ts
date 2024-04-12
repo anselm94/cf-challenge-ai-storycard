@@ -104,8 +104,8 @@ async function translateStory(
 			new Ai(AI)
 		);
 		storyData.text[language as LangCode] = {
-			title: title,
-			content: content
+			title: title!,
+			content: content!
 		};
 	}
 
