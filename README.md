@@ -4,6 +4,26 @@ Create Stories in a card with illustrations using AI. Created as part of [Cloudf
 
 **Demo** - https://cf-challenge-ai-storycard.pages.dev
 
+## Features
+
+1. **Create a Story Card**
+   ![Create storycard](./docs/storycard-create.gif)
+
+2. **Translate the Story**
+   ![Translate storycard](./docs/storycard-translate.gif)
+
+3. **Restyle the illustration**
+   ![Restyle storycard](./docs/storycard-restyle.gif)
+
+4. **Surprise Me**
+   ![Surprise me](./docs/storycard-surpriseme.gif)
+
+5. **Download Story Card**
+   ![Download storycard](./docs/download-storycard.png)
+
+6. **Collaborate with friends**
+   The url for a storycard is valid for a day. Comeback, edit and download it anytime within 24 hours.
+
 ## Developing
 
 Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
