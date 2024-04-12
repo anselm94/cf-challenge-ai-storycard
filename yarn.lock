@@ -27,6 +27,11 @@
   dependencies:
     regenerator-runtime "^0.14.0"
 
+"@cloudflare/ai@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@cloudflare/ai/-/ai-1.1.0.tgz#89c17ae15b1779147077b4a8a0a36c422e5d7a96"
+  integrity sha512-6j2aeelMfPj2YVj/zQBAj9PAbEZSrO/t+Wywy3Gvk93JsTlsZvEH+V9JYIZHynhSt0juuOrSWP9ju3vN6lUDMQ==
+
 "@cloudflare/kv-asset-handler@0.3.1":
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/@cloudflare/kv-asset-handler/-/kv-asset-handler-0.3.1.tgz#9b86167e58dbc419943c8d3ddcd8e2823f5db300"

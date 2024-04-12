@@ -12,6 +12,7 @@ declare global {
 			env: {
 				KV: KVNamespace;
 				R2: R2Bucket;
+				AI: unknown;
 			};
 		}
 	}

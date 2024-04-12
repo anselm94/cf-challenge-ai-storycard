@@ -1,24 +1,25 @@
-import type { StoryData } from '$lib/types/types';
+import { generateStory } from '$lib/server/ai';
+import type { StoryData, StoryPromptInput } from '$lib/types/types';
+import { Ai } from '@cloudflare/ai';
 import { json } from '@sveltejs/kit';
 import { randomUUID } from 'crypto';
 type PostData = {
 	type: 'create-story';
 };
 
-type CreateStoryPostData = PostData & {
-	genre: string;
-	character: string;
-	location: string;
-	tone: string;
-	theme: string;
-};
+type CreateStoryPostData = PostData & StoryPromptInput;
 
 export const POST = async ({ request, platform }) => {
 	const data: PostData = await request.json();
 
 	switch (data.type) {
 		case 'create-story': {
-			const a = await createStory(data as CreateStoryPostData, platform!.env.KV);
+			const a = await createStory(
+				data as CreateStoryPostData,
+				platform!.env.KV,
+				platform!.env.R2,
+				platform!.env.AI
+			);
 			return json({ storyId: a.storyId });
 		}
 		default:
@@ -30,28 +31,37 @@ export const POST = async ({ request, platform }) => {
 
 async function createStory(
 	{ genre, character, location, tone, theme }: CreateStoryPostData,
-	KV: KVNamespace
+	KV: KVNamespace,
+	R2: R2Bucket,
+	AI: unknown
 ) {
 	const storyId = randomUUID();
 
-	// TODO generate story, title, illustration caption, illustration
-	await new Promise((resolve) => setTimeout(resolve, 5000));
-	const title = `Story Card - ${genre} - ${character} - ${location} - ${tone} - ${theme}`;
-	console.log(title);
+	const { title, content, illustration } = await generateStory(
+		{ genre, character, location, tone, theme, extraPrompt: '' },
+		new Ai(AI)
+	);
+
+	const objectKey = `img-${storyId}`;
+	await R2.put(objectKey, illustration, {
+		httpMetadata: {
+			contentType: 'image/png'
+		}
+	});
 
 	const storyData: StoryData = {
 		id: storyId,
 		text: {
 			en: {
-				title: '',
-				content: ''
+				title: title,
+				content: content
 			}
 		},
 		illustration: {
 			selectedStyle: 'none',
 			styles: {
 				none: {
-					url: ''
+					url: `https://pub-edb1f3e64c864cb685897db171870652.r2.dev/${objectKey}`
 				}
 			}
 		}

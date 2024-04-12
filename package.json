@@ -11,6 +11,7 @@
 		"format": "prettier --write ."
 	},
 	"devDependencies": {
+		"@cloudflare/ai": "^1.1.0",
 		"@cloudflare/workers-types": "^4.20240405.0",
 		"@fontsource/chewy": "^5.0.8",
 		"@fontsource/poppins": "^5.0.13",

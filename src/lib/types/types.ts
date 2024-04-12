@@ -23,3 +23,11 @@ export type StoryData = {
 		styles: Record<'none', { url: string }> & Partial<Record<IllustrationStyle, { url: string }>>;
 	};
 };
+export type StoryPromptInput = {
+	genre: string;
+	character: string;
+	location: string;
+	tone: string;
+	theme: string;
+	extraPrompt: string;
+};
