@@ -39,8 +39,8 @@ export async function generateStory(
 		stream: false
 	})) as { response: string };
 	let [storyTitle, storyContent] = outStory.response.split('---');
-	storyTitle = storyTitle?.replace('title', '').replace('Title', '').replace(':', '').trim() ?? '';
-	storyContent = storyContent?.replace('story', '').replace('Story', '').trim() ?? '';
+	storyTitle = storyTitle?.replaceAll('title', '').replaceAll('Title', '').replaceAll(':', '').trim() ?? '';
+	storyContent = storyContent?.replaceAll('story', '').replaceAll('Story', '').trim() ?? '';
 	console.log(`Generated a story with title - ${storyTitle}`);
 
 	// Illustration prompt generation
@@ -56,7 +56,7 @@ export async function generateStory(
 			}
 		]
 	})) as { response: string };
-	const illusImgPrompt = outIllusCaption.response.replace('"', '').trim();
+	const illusImgPrompt = outIllusCaption.response.replaceAll('"', '').trim();
 	console.log(`Generated an illustration prompt - ${illusImgPrompt} for story - ${storyTitle}`);
 
 	// generate image

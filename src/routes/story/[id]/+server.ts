@@ -88,14 +88,14 @@ async function updateIllustrationStyle(
 				{ authorStyle: illustrationStyle, illusImgPrompt: storyData.illustration.imagePrompt },
 				new Ai(AI)
 			);
-			const objectKey = `img-${storyId}-${illustrationStyle.toLocaleLowerCase().replace(' ', '-')}`;
+			const objectKey = `img-${storyId}-${illustrationStyle.toLocaleLowerCase().replaceAll(' ', '-')}`;
 			await R2.put(objectKey, illustration, {
 				httpMetadata: {
 					contentType: 'image/png'
 				}
 			});
 			storyData.illustration.styles[illustrationStyle] = {
-				url: `https://pub-edb1f3e64c864cb685897db171870652.r2.dev/${objectKey}`
+				url: `/img/${objectKey}`
 			};
 			await KV.put(key, JSON.stringify(storyData), { expirationTtl: 60 * 60 * 24 });
 		}

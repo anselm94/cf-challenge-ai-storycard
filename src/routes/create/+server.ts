@@ -62,7 +62,7 @@ async function createStory(
 			imagePrompt: imagePrompt,
 			styles: {
 				none: {
-					url: `https://pub-edb1f3e64c864cb685897db171870652.r2.dev/${objectKey}`
+					url: `/img/${objectKey}`
 				}
 			}
 		}

@@ -83,7 +83,7 @@
 		if (dataUrl) {
 			const link = document.createElement('a');
 			link.href = dataUrl;
-			link.download = 'storybook.png';
+			link.download = `${storyTitleText.toLowerCase().replaceAll(' ', '-')}-storycard.png`;
 			link.click();
 			link.remove();
 		}
