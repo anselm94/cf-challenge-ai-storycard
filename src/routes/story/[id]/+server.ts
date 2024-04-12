@@ -1,4 +1,6 @@
+import { translateLanguageStory } from '$lib/server/ai';
 import type { LangCode, IllustrationStyle, StoryData } from '$lib/types/types';
+import { Ai } from '@cloudflare/ai';
 import { json } from '@sveltejs/kit';
 
 type PostData = {
@@ -24,7 +26,12 @@ export const POST = async ({ params, request, platform }) => {
 
 	switch (data.type) {
 		case 'translate':
-			await translateStory(params.id, data as TranslatePostData, platform!.env.KV);
+			await translateStory(
+				params.id,
+				data as TranslatePostData,
+				platform!.env.KV,
+				platform!.env.AI
+			);
 			break;
 		case 'update-text':
 			await updateText(params.id, data as UpdateTextPostData, platform!.env.KV);
@@ -77,17 +84,29 @@ async function updateIllustrationStyle(
 	await KV.put(key, JSON.stringify(storyData));
 }
 
-async function translateStory(storyId: string, { language }: TranslatePostData, KV: KVNamespace) {
+async function translateStory(
+	storyId: string,
+	{ language }: TranslatePostData,
+	KV: KVNamespace,
+	AI: unknown
+) {
 	const key = `story#${storyId}`;
 
 	const storyData = await KV.get<StoryData>(key, 'json');
 
 	if (storyData) {
+		const { title, content } = await translateLanguageStory(
+			{
+				storyTitle: storyData.text['en']!.title,
+				storyContent: storyData.text['en']!.content,
+				target_lang: language
+			},
+			new Ai(AI)
+		);
 		storyData.text[language as LangCode] = {
-			title: storyData.text['en']!.title, // TODO translate
-			content: storyData.text['en']!.content // TODO translate
+			title: title,
+			content: content
 		};
-		await new Promise((resolve) => setTimeout(resolve, 5000));
 	}
 
 	await KV.put(key, JSON.stringify(storyData));

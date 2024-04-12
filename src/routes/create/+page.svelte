@@ -137,6 +137,6 @@
 <Modal bind:open={isTaskInProgress} dismissable={false} size="xs">
 	<div class="flew-row flex items-center justify-center">
 		<Spinner />
-		<p class="ml-4">Creating a Story Card ... (may take a minute or two)</p>
+		<p class="ml-4">Creating a Story Card ...(may take a minute or two)</p>
 	</div>
 </Modal>

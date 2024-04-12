@@ -43,7 +43,7 @@ async function createStory(
 	);
 
 	const objectKey = `img-${storyId}`;
-	await R2.put(objectKey, illustration, {
+	await R2.put(objectKey, illustration.buffer, {
 		httpMetadata: {
 			contentType: 'image/png'
 		}

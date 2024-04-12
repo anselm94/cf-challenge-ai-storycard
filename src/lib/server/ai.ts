@@ -1,4 +1,4 @@
-import type { StoryPromptInput } from '$lib/types/types';
+import type { LangCode, StoryPromptInput } from '$lib/types/types';
 import { Ai } from '@cloudflare/ai';
 
 const ILLUSTRATION_AUTHORS = [
@@ -39,7 +39,7 @@ export async function generateStory(
 		stream: false
 	})) as { response: string };
 	let [storyTitle, storyContent] = outStory.response.split('---');
-	storyTitle = storyTitle.replace('title', '').replace('Title', '').trim();
+	storyTitle = storyTitle.replace('title', '').replace('Title', '').replace(':', '').trim();
 	storyContent = storyContent.replace('story', '').replace('Story', '').trim();
 
 	// Illustration prompt generation
@@ -59,6 +59,7 @@ export async function generateStory(
 	})) as { response: string };
 	const illusImgPrompt = outIllusCaption.response.replace('"', '').trim();
 
+    // Illustration generation
 	const outIllus = await ai.run('@cf/bytedance/stable-diffusion-xl-lightning', {
 		prompt: illusImgPrompt,
 		num_steps: 4
@@ -68,5 +69,25 @@ export async function generateStory(
 		title: storyTitle,
 		content: storyContent,
 		illustration: outIllus
+	};
+}
+
+export async function translateLanguageStory(
+	{
+		storyTitle,
+		storyContent,
+		target_lang
+	}: { storyTitle: string; storyContent: string; target_lang: LangCode },
+	ai: Ai
+) {
+	const outTranslated = await ai.run('@cf/meta/m2m100-1.2b', {
+		source_lang: 'en',
+		target_lang: target_lang,
+		text: `${storyTitle}\n---\n${storyContent}`
+	});
+	[storyTitle, storyContent] = (outTranslated.translated_text ?? '---').split('---');
+	return {
+		title: storyTitle,
+		content: storyContent
 	};
 }
