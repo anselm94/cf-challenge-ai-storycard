@@ -52,7 +52,7 @@
 			top: 65,
 			width: 320,
 			height: 420,
-			fontSize: 15 * (650 / storyContentText.length), // to fit in variable text size
+			fontSize: 15,
 			isWrapping: true,
 			editable: false,
 			fontFamily: 'Poppins',
@@ -71,6 +71,11 @@
 			}
 		);
 		fImageIllus.scaleToHeight(480);
+
+		// iteratively adjust the text font size to fit in the text box
+		while (fTextboxStoryContent.height > 420) {
+			fTextboxStoryContent.set({ fontSize: fTextboxStoryContent.fontSize - 1 });
+		}
 
 		fCanvas?.add(fImageIllus);
 		fCanvas?.add(fImageGrungeBorder);

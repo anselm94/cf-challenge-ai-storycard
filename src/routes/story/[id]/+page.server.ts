@@ -26,7 +26,7 @@ export const load: PageServerLoad = async function ({ platform, params }) {
 	// 			selectedStyle: 'none',
 	// 			styles: {
 	// 				none: {
-	// 					url: '/img/img-ed57c9c6-1d8b-4588-acf6-f5cfdcf16219-none'
+	// 					url: 'https://i.pravatar.cc/500'
 	// 				}
 	// 			}
 	// 		}

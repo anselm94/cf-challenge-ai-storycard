@@ -17,11 +17,24 @@ npm run dev -- --open
 
 ## Deploy
 
+### Prerequisites
+
+1. Create a Cloudflare account
+2. Create an application under 'Workers & Pages'
+3. Create a KV namespace
+4. Create an R2 bucket
+5. Update the [`wrangler.toml`](./wrangler.toml) file with right KV `id` and R2 `bucket_name`
+
+### Steps
+
 1. Build the app
+
 ```bash
 npm run build
 ```
+
 2. Deploy the app
+
 ```bash
 npm run deploy
 ```

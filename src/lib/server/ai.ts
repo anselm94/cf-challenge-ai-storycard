@@ -40,7 +40,7 @@ export async function generateStory(
 	})) as { response: string };
 	let [storyTitle, storyContent] = outStory.response.split('---');
 	storyTitle = storyTitle?.replaceAll('title', '').replaceAll('Title', '').replaceAll(':', '').trim() ?? '';
-	storyContent = storyContent?.replaceAll('story', '').replaceAll('Story', '').trim() ?? '';
+	storyContent = storyContent?.replaceAll('story', '').replaceAll('Story', '').replaceAll('\n\n', '\n').trim() ?? '';
 	console.log(`Generated a story with title - ${storyTitle}`);
 
 	// Illustration prompt generation
