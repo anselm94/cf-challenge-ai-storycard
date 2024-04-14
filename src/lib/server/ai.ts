@@ -2,30 +2,13 @@ import type { LangCode, StoryPromptInput } from '$lib/types/types';
 import { Ai } from '@cloudflare/ai';
 import { readableStreamToArrayBuffer } from './utils';
 
-const ILLUSTRATION_AUTHORS = [
-	'Corry Loftis',
-	'James Gilleard',
-	'Jerry Pinkney',
-	'Jim Toomey',
-	'Jon Klassen',
-	'Lois Van Baarle',
-	'Martin Rowson',
-	'Mary Blair',
-	'Michal Lisowski',
-	'Oriol Vidal',
-	'Pascal Campion',
-	'Peter de Seve',
-	'Possy Simmonds',
-	'Sam Bosma',
-	'Tatsuro Kiuchi'
-];
-
 export async function generateStory(
 	{ genre, character, location, tone, theme, extraPrompt }: StoryPromptInput,
 	ai: Ai
 ) {
 	// Story generation
-	const outStory = (await ai.run('@cf/mistral/mistral-7b-instruct-v0.1', {
+	// @ts-ignore
+	const outStory = (await ai.run('@hf/mistralai/mistral-7b-instruct-v0.2', {
 		messages: [
 			{
 				role: 'system',
@@ -44,7 +27,8 @@ export async function generateStory(
 	console.log(`Generated a story with title - ${storyTitle}`);
 
 	// Illustration prompt generation
-	const outIllusCaption = (await ai.run('@cf/mistral/mistral-7b-instruct-v0.1', {
+	// @ts-ignore
+	const outIllusCaption = (await ai.run('@hf/mistralai/mistral-7b-instruct-v0.2', {
 		messages: [
 			{
 				role: 'system',

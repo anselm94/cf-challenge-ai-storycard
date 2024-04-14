@@ -149,7 +149,7 @@
 				>
 			</div>
 			<div class="px-8 pb-12 pt-4 text-base font-normal leading-[5rem]">
-				Create a
+				A
 				<span class="font-bold"> Story Card </span>
 				with a
 				<Label defaultClass="inline-block">
@@ -161,12 +161,12 @@
 					<span class="hidden">Character</span>
 					<Select class="" items={CHARACTERS} bind:value={selectedCharacter} />
 				</Label>
-				who lives in a
+				who lives in
 				<Label defaultClass="inline-block">
 					<span class="hidden">Setting</span>
 					<Select class="" items={LOCATIONS} bind:value={selectedLocation} />
 				</Label>
-				. The story should have a
+				. The story should have
 				<Label defaultClass="inline-block">
 					<span class="hidden">Tone</span>
 					<Select class="" items={TONES} bind:value={selectedTone} />
@@ -180,7 +180,7 @@
 				<Label defaultClass="inline-block">
 					<span class="hidden">Extra Prompt input</span>
 					<Input
-						defaultClass="block w-96"
+						defaultClass="block w-full lg:w-96"
 						placeholder="(Optional) Write further story narration"
 						bind:value={extraPrompt}
 					/>
