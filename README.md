@@ -28,6 +28,14 @@ Create Stories in a card with illustrations using AI. Created as part of [Cloudf
 7. **Collaborate with friends**
    The url for a storycard is valid for a day. Comeback, edit and download it anytime within 24 hours.
 
+## Cloudflare AI Models used:
+
+1. **Text Generation** - [`mistral-7b-instruct-v0.2`](https://developers.cloudflare.com/workers-ai/models/mistral-7b-instruct-v0.2/)
+2. **Image Generation** - [`stable-diffusion-xl-base-1.0`](https://developers.cloudflare.com/workers-ai/models/stable-diffusion-xl-base-1.0/)
+3. **Translation** - [`m2m100-1.2b`](https://developers.cloudflare.com/workers-ai/models/m2m100-1.2b/)
+4. **Image to Text** - [`uform-gen2-qwen-500m`](https://developers.cloudflare.com/workers-ai/models/uform-gen2-qwen-500m/)
+5. **Text Content Moderation** - [`llamaguard-7b-awq`](https://developers.cloudflare.com/workers-ai/models/llamaguard-7b-awq/)
+
 ## Developing
 
 Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
