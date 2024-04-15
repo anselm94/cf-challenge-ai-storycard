@@ -20,9 +20,13 @@
 	import Label from 'flowbite-svelte/Label.svelte';
 	import Modal from 'flowbite-svelte/Modal.svelte';
 	import Select from 'flowbite-svelte/Select.svelte';
+	import Alert from 'flowbite-svelte/Alert.svelte';
 	import Spinner from 'flowbite-svelte/Spinner.svelte';
 	import Textarea from 'flowbite-svelte/Textarea.svelte';
+	import CheckIcon from 'flowbite-svelte-icons/BadgeCheckSolid.svelte';
+	import AlertIcon from 'flowbite-svelte-icons/ExclamationCircleSolid.svelte';
 	import type { PageData } from './$types';
+	import { Tooltip } from 'flowbite-svelte';
 
 	export let data: PageData;
 
@@ -60,6 +64,8 @@
 	let storyIllusUrl = data.data.illustration.styles[selIllustrationStyle]!.url;
 
 	$: storyLanguages = Object.keys(data.data.text);
+	$: contentSafe =
+		data.data.contentFilter.text === 'safe' && data.data.contentFilter.illustration === 'safe';
 
 	let isTranslateModalOpen = false;
 	let isTaskInProgress = false;
@@ -127,23 +133,55 @@
 					<DownloadIcon class="me-2 h-3.5 w-3.5" />Download</Button
 				>
 			</div>
-			<div class="flex flex-row justify-center py-4">
-				<ButtonGroup>
-					{#each storyLanguages as lang}
+			<div class="flex flex-row items-center justify-center">
+				<div class="flex flex-1"></div>
+				<div class="flex flex-1 flex-row justify-center py-4">
+					<ButtonGroup>
+						{#each storyLanguages as lang}
+							<Button
+								color={lang === selLanguage ? 'primary' : 'light'}
+								on:click={() => selectLanguage(lang)}
+								>{LANGUAGES.filter((l) => l.value === lang)[0].name}</Button
+							>
+						{/each}
 						<Button
-							color={lang === selLanguage ? 'primary' : 'light'}
-							on:click={() => selectLanguage(lang)}
-							>{LANGUAGES.filter((l) => l.value === lang)[0].name}</Button
+							color="light"
+							class="bg-gray-200"
+							on:click={() => (isTranslateModalOpen = true)}
 						>
-					{/each}
-					<Button color="light" class="bg-gray-200" on:click={() => (isTranslateModalOpen = true)}>
-						<TranslateIcon class="me-2 h-4 w-4" />
-						Add translation
-					</Button>
-				</ButtonGroup>
+							<TranslateIcon class="me-2 h-4 w-4" />
+							Add translation
+						</Button>
+					</ButtonGroup>
+				</div>
+				<div class="flex flex-1 flex-row items-center justify-end">
+					<Alert
+						color={contentSafe ? 'green' : 'red'}
+						border
+						class="me-4 flex flex-row items-center px-2 py-2"
+					>
+						{#if contentSafe}
+							<CheckIcon slot="icon" class="h-4 w-4" />
+							<span class="font-medium">Safe</span>
+						{:else}
+							<AlertIcon slot="icon" class="h-4 w-4" />
+							<span class="font-medium">Not Safe</span>
+						{/if}
+					</Alert>
+					<Tooltip
+						>{contentSafe
+							? 'Story & Illustration are verified to be safe for Children'
+							: 'Either Story or Illustration has content not suitable for children'}</Tooltip
+					>
+				</div>
 			</div>
+
 			<div class="flex flex-row justify-center">
-				<div class="inline-block touch-auto overflow-scroll px-4 py-16">
+				<div
+					class="mx-4 my-16 inline-block h-auto touch-auto overflow-scroll {contentSafe
+						? 'blur-0'
+						: 'blur-lg active:blur-0'}"
+				>
 					<StoryCardPreview
 						bind:this={elStoryCardPreview}
 						{storyTitleText}
@@ -151,6 +189,9 @@
 						storyIllusPath={storyIllusUrl}
 					/>
 				</div>
+				{#if !contentSafe}
+					<Tooltip open>Content not suitable for children. Click to reveal.</Tooltip>
+				{/if}
 			</div>
 		</div>
 		<div class="basis-1/4">
@@ -196,6 +237,7 @@
 						name="story-title"
 						placeholder="Story Title"
 						type="text"
+						class={contentSafe ? 'blur-0' : 'blur-sm focus:blur-0'}
 						bind:value={storyTitleText}
 					/>
 				</div>
@@ -205,7 +247,7 @@
 						id="story-content"
 						name="story-content"
 						placeholder="Story Content"
-						class="h-56 lg:h-36 xl:h-80"
+						class="h-56 lg:h-36 xl:h-80 {contentSafe ? 'blur-0' : 'blur-sm focus:blur-0'}"
 						bind:value={storyContentText}
 					/>
 				</div>

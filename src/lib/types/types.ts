@@ -31,6 +31,10 @@ export type StoryData = {
 		selectedStyle: IllustrationStyle;
 		styles: Record<'none', { url: string }> & Partial<Record<IllustrationStyle, { url: string }>>;
 	};
+	contentFilter: {
+		text: 'safe' | 'unsafe';
+		illustration: 'safe' | 'unsafe';
+	}
 };
 export type StoryPromptInput = {
 	genre: string;

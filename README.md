@@ -21,7 +21,11 @@ Create Stories in a card with illustrations using AI. Created as part of [Cloudf
 5. **Download Story Card**
    ![Download storycard](./docs/download-storycard.png)
 
-6. **Collaborate with friends**
+6. **Safe for Kids**
+   If any inappropriate content is detected, the story card will be marked as "unsafe" with a blurred preview image.
+   ![Safety Classification](./docs/storycard-safety-classification.png)
+
+7. **Collaborate with friends**
    The url for a storycard is valid for a day. Comeback, edit and download it anytime within 24 hours.
 
 ## Developing

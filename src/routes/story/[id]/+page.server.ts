@@ -29,6 +29,10 @@ export const load: PageServerLoad = async function ({ platform, params }) {
 	// 					url: 'https://i.pravatar.cc/500'
 	// 				}
 	// 			}
+	// 		},
+	// 		contentFilter: {
+	// 			text: 'safe',
+	// 			illustration: 'safe'
 	// 		}
 	// 	} as StoryData)
 	// );

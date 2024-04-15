@@ -60,7 +60,6 @@
 			lineHeight: 1.3,
 			textAlign: 'center'
 		});
-		// fTextboxStoryContent.centerV()
 
 		let fImageIllus = await FabricImage.fromURL(
 			storyIllusPath,

@@ -37,7 +37,7 @@ async function createStory(
 ) {
 	const storyId = randomUUID();
 
-	const { title, content, imagePrompt, illustration } = await generateStory(
+	const { title, content, imagePrompt, illustration, contentFilter } = await generateStory(
 		{ genre, character, location, tone, theme, extraPrompt: '' },
 		new Ai(AI)
 	);
@@ -65,6 +65,10 @@ async function createStory(
 					url: `/img/${objectKey}`
 				}
 			}
+		},
+		contentFilter: {
+			text: contentFilter.text,
+			illustration: contentFilter.illustration
 		}
 	};
 	await KV.put(`story#${storyId}`, JSON.stringify(storyData), {
