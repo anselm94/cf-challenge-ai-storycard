@@ -2,6 +2,12 @@
 
 Create Stories in a card with illustrations using AI. Created as part of [Cloudflare AI Dev Challenge](https://dev.to/challenges/cloudflare).
 
+**Blog Post** - https://dev.to/anselm94/fun-beautiful-printable-story-cards-for-kids-with-cloudflare-ai-3fbf
+
+> **Note**
+> 
+> This project won Cloudflare AI Challenge under 'Multiple Models' prize category winner - [Dev.to Announcement Post](https://dev.to/devteam/congrats-to-the-cloudflare-ai-challenge-winners-25lm) 😉
+
 **Demo** - https://cf-challenge-ai-storycard.pages.dev
 
 ## Features
